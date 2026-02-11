@@ -8,10 +8,10 @@ This starter full stack project has been generated using AlgoKit. See below for 
 1. Clone this repository to your local machine.
 2. Ensure [Docker](https://www.docker.com/) is installed and operational. Then, install `AlgoKit` following this [guide](https://github.com/algorandfoundation/algokit-cli#install).
 3. Run `algokit project bootstrap all` in the project directory. This command sets up your environment by installing necessary dependencies, setting up a Python virtual environment, and preparing your `.env` file.
-4. In the case of a smart contract project, execute `algokit generate env-file -a target_network localnet` from the `2-logicsig-contracts` directory to create a `.env.localnet` file with default configuration for `localnet`.
+4. In the case of a smart contract project, execute `algokit generate env-file -a target_network localnet` from the `logicsig` directory to create a `.env.localnet` file with default configuration for `localnet`.
 5. To build your project, execute `algokit project run build`. This compiles your project and prepares it for running.
 6. For project-specific instructions, refer to the READMEs of the child projects:
-   - Smart Contracts: [2-logicsig-contracts](projects/2-logicsig-contracts/README.md)
+   - Smart Contracts: [logicsig](projects/logicsig/README.md)
    - Frontend Application: [2-logicsig-frontend](projects/2-logicsig-frontend/README.md)
 
 > This project is structured as a monorepo, refer to the [documentation](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/project/run.md) to learn more about custom command orchestration via `algokit project run`.
@@ -45,7 +45,7 @@ It has also been configured to have a productive dev experience out of the box i
 
 ## Integrating with smart contracts and application clients
 
-Refer to the [2-logicsig-contracts](projects/2-logicsig-contracts/README.md) folder for overview of working with smart contracts, [projects/2-logicsig-frontend](projects/2-logicsig-frontend/README.md) for overview of the React project and the [projects/2-logicsig-frontend/contracts](projects/2-logicsig-frontend/src/contracts/README.md) folder for README on adding new smart contracts from backend as application clients on your frontend. The templates provided in these folders will help you get started.
+Refer to the [logicsig](projects/logicsig/README.md) folder for overview of working with smart contracts, [projects/2-logicsig-frontend](projects/2-logicsig-frontend/README.md) for overview of the React project and the [projects/2-logicsig-frontend/contracts](projects/2-logicsig-frontend/src/contracts/README.md) folder for README on adding new smart contracts from backend as application clients on your frontend. The templates provided in these folders will help you get started.
 When you compile and generate smart contract artifacts, your frontend component will automatically generate typescript application clients from smart contract artifacts and move them to `frontend/src/contracts` folder, see [`generate:app-clients` in package.json](projects/2-logicsig-frontend/package.json). Afterwards, you are free to import and use them in your frontend application.
 
 The frontend starter also provides an example of interactions with your LiquidevmClient in [`AppCalls.tsx`](projects/2-logicsig-frontend/src/components/AppCalls.tsx) component by default.

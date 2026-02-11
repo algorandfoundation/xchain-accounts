@@ -1,0 +1,6 @@
+packages:
+  - projects/*
+linkWorkspacePackages: true
+onlyBuiltDependencies:
+  - '@algorandfoundation/puya-ts'
+  - esbuild

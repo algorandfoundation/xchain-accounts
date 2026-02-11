@@ -15,16 +15,16 @@ permissions:
   packages: read
 
 jobs:
-  2-logicsig-contracts-validate:
-    name: Run 2-logicsig-contracts release
+  logicsig-validate:
+    name: Run logicsig release
     secrets: inherit
-    uses: ./.github/workflows/2-logicsig-contracts-ci.yaml
+    uses: ./.github/workflows/logicsig-ci.yaml
 
-  2-logicsig-contracts-release:
-    name: Run 2-logicsig-contracts release
+  logicsig-release:
+    name: Run logicsig release
     secrets: inherit
-    uses: ./.github/workflows/2-logicsig-contracts-cd.yaml
-    needs: 2-logicsig-contracts-validate
+    uses: ./.github/workflows/logicsig-cd.yaml
+    needs: logicsig-validate
 
   2-logicsig-frontend-validate:
     name: Run 2-logicsig-frontend release
