@@ -6,4 +6,4 @@ type = 'workspace'
 projects_root_path = 'projects'
 
 [project.run]
-build = ['logicsig', '2-logicsig-frontend', 'sdk']
+build = ['logicsig', 'sdk']

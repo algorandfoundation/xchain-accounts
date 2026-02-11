@@ -16,7 +16,7 @@
     "dist/"
   ],
   "scripts": {
-    "prebuild": "cp ../logicsig/smart_contracts/artifacts/liquidevm/AlgolandFundingLsig.teal src/generated",
+    "prebuild": "cp ../logicsig/smart_contracts/artifacts/liquidevm/AlgolandFundingLsig.teal src/generated/ && node -e \"const t=require('fs').readFileSync('src/generated/AlgolandFundingLsig.teal','utf8');require('fs').writeFileSync('src/teal.ts','export const ALGO_FUNDING_LSIG_TEAL = '+JSON.stringify(t)+';\\n')\"",
     "build": "tsc"
   },
   "keywords": [],
