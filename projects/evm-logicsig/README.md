@@ -1,6 +1,6 @@
 # EVM LogicSig
 
-Algorand smart contract that enables EVM wallet addresses to control Algorand accounts through ECDSA signature verification.
+Algorand logic signature (stateless smart contract) that enables EVM wallet addresses to control Algorand accounts through ECDSA signature verification.
 
 ## Overview
 
