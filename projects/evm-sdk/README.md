@@ -2,7 +2,7 @@
 
 Use EVM wallets (MetaMask, etc.) to sign and send Algorand transactions using **EIP-712 typed structured data**.
 
-The SDK compiles a per-address [logic signature](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/smartsigs/) that validates EVM (secp256k1) signatures on-chain using the AVM's native `ecdsa_pk_recover` and `keccak256` opcodes. Each EVM address maps deterministically to an Algorand lsig address that only that EVM private key can authorize.
+The SDK compiles a per-address [logic signature](https://dev.algorand.co/concepts/smart-contracts/logic-sigs/) that validates EVM (secp256k1) signatures on-chain using the AVM's native `ecdsa_pk_recover` and `keccak256` opcodes. Each EVM address maps deterministically to an Algorand lsig address that only that EVM private key can authorize.
 
 ## Install
 

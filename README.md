@@ -212,9 +212,9 @@ On `main` branch pushes:
 ## Resources
 
 - [AlgoKit Documentation](https://github.com/algorandfoundation/algokit-cli)
-- [Algorand Developer Portal](https://developer.algorand.org/)
+- [Algorand Developer Portal](https://dev.algorand.co/)
 - [Algorand TypeScript](https://github.com/algorandfoundation/puya-ts)
-- [ECDSA on Algorand](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/opcodes/#ecdsa_verify)
+- [ECDSA on Algorand](https://dev.algorand.co/reference/algorand-teal/opcodes/#ecdsa_verify)
 
 ## License
 

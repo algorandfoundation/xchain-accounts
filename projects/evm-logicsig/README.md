@@ -210,8 +210,8 @@ Install the extension: [AlgoKit AVM Debugger](https://marketplace.visualstudio.c
 
 - [Algorand TypeScript Documentation](https://github.com/algorandfoundation/puya-ts)
 - [AlgoKit Documentation](https://github.com/algorandfoundation/algokit-cli)
-- [ECDSA on Algorand](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/opcodes/#ecdsa_verify)
-- [LogicSig Guide](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/smartsigs/)
+- [ECDSA on Algorand](https://dev.algorand.co/reference/algorand-teal/opcodes/#ecdsa_verify)
+- [LogicSig Guide](https://dev.algorand.co/concepts/smart-contracts/logic-sigs/)
 - [Main Project README](../../README.md)
 
 ## License
