@@ -114,3 +114,40 @@ export const EIP712_TYPES = {
 export function formatEIP712Message(payload: Uint8Array): { "Transaction ID": string } {
   return { "Transaction ID": "0x" + Buffer.from(payload).toString("hex") }
 }
+
+/**
+ * Parameters passed to signMessage callbacks containing all EIP-712 typed data
+ * needed to sign with any EVM wallet.
+ */
+export interface SignTypedDataParams {
+  domain: typeof EIP712_DOMAIN
+  types: {
+    EIP712Domain: Array<{ name: string; type: string }>
+    AlgorandTransaction: Array<{ name: string; type: string }>
+  }
+  primaryType: "AlgorandTransaction"
+  message: { "Transaction ID": string }
+}
+
+/**
+ * Build a complete EIP-712 typed data object from a raw transaction/group ID payload.
+ * Used internally by the SDK to construct the signMessage callback parameter.
+ *
+ * @param payload - The 32-byte transaction ID or group ID
+ * @returns EIP-712 typed data ready for signing
+ */
+export function buildTypedData(payload: Uint8Array): SignTypedDataParams {
+  return {
+    domain: EIP712_DOMAIN,
+    types: {
+      EIP712Domain: [
+        { name: "name", type: "string" },
+        { name: "version", type: "string" },
+        { name: "chainId", type: "uint256" },
+      ],
+      ...EIP712_TYPES,
+    },
+    primaryType: "AlgorandTransaction",
+    message: formatEIP712Message(payload),
+  }
+}

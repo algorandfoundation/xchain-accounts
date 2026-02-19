@@ -1,0 +1,9 @@
+[algokit]
+min_version = "v2.0.0"
+
+[project]
+type = "sdk"
+name = 'rpc-server'
+
+[project.run]
+build = { commands = ['pnpm run build'] }

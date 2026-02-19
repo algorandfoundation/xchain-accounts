@@ -7,3 +7,5 @@ onlyBuiltDependencies:
   - '@algorandfoundation/puya-ts'
   - esbuild
   - keccak
+  - sharp
+  - workerd

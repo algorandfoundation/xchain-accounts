@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "build": "tsc --noEmit",
     "dev": "wrangler dev",
     "deploy": "wrangler deploy"
   },
@@ -12,6 +13,8 @@
     "liquid-accounts-evm": "file:../evm-sdk"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4",
+    "typescript": "^5",
     "wrangler": "^4"
   }
 }

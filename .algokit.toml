@@ -6,4 +6,4 @@ type = 'workspace'
 projects_root_path = 'projects'
 
 [project.run]
-build = ['evm-logicsig', 'evm-sdk', 'use-wallet', 'use-wallet-ui', 'frontend']
+build = ['evm-logicsig', 'evm-sdk', 'use-wallet', 'use-wallet-ui', 'frontend', 'rpc-server']

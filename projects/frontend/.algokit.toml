@@ -6,4 +6,4 @@ type = "frontend"
 name = 'frontend'
 
 [project.run]
-build = { commands = ['npm run build'], description = 'Build frontend' }
+build = { commands = ['pnpm run build'], description = 'Build frontend' }

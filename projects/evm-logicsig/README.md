@@ -53,13 +53,13 @@ evm-logicsig/
 
 ### Template Variables
 
-The contract uses three template variables:
+The contract uses one template variable and two precomputed constants:
 
-- **OWNER**: 20-byte Ethereum address that controls this LogicSig instance
-- **DOMAIN_SEPARATOR**: 32-byte precomputed EIP-712 domain separator (`keccak256(domainTypeHash + nameHash + versionHash + chainId)`)
-- **MESSAGE_TYPE_HASH**: 32-byte precomputed EIP-712 message type hash (`keccak256("AlgorandTransaction(bytes32 Transaction ID)")`)
+- **OWNER** (template variable): 20-byte Ethereum address that controls this LogicSig instance
+- **DOMAIN_SEPARATOR** (constant): 32-byte precomputed EIP-712 domain separator (`keccak256(domainTypeHash + nameHash + versionHash + chainId)`)
+- **MESSAGE_TYPE_HASH** (constant): 32-byte precomputed EIP-712 message type hash (`keccak256("AlgorandTransaction(bytes32 Transaction ID)")`)
 
-When compiling, the SDK substitutes these values into the TEAL bytecode, creating a unique LogicSig program for each EVM address.
+When compiling, the SDK substitutes the owner address into the TEAL bytecode, creating a unique LogicSig program for each EVM address.
 
 ## Setup
 
@@ -199,7 +199,7 @@ const sdk = new LiquidEvmSdk({ algorand })
 
 // Get the Algorand address
 const addr = await sdk.getAddress({ 
-  evmAddress: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb' 
+  evmAddress: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb2' 
 })
 
 // Fund the address (minimum 0.1 ALGO)

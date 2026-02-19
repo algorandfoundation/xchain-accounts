@@ -69,7 +69,7 @@ const sdk = new LiquidEvmSdk({ algorand })
 
 // MetaMask or other EVM wallet provider
 const provider = new BrowserProvider(window.ethereum)
-const evmAddress = await provider.send("eth_requestAccounts", [])[0]
+const evmAddress = (await provider.send("eth_requestAccounts", []))[0]
 ```
 
 ### Get the Algorand address for an EVM account
@@ -83,18 +83,17 @@ This is useful for checking balances or displaying the address before any signin
 
 ### Get a TransactionSigner
 
-`getSigner` returns an algokit-utils compatible `{ addr, signer }` pair. Pass `signMessage` — a callback that receives the raw transaction/group ID and returns an EIP-712 signature.
+`getSigner` returns an algokit-utils compatible `{ addr, signer }` pair. Pass `signMessage` — a callback that receives the full EIP-712 typed data (domain, types, primaryType, message) and returns the signature.
 
 ```typescript
 import { ethers } from "ethers"
-import { formatEIP712Message, EIP712_DOMAIN, EIP712_TYPES } from "liquid-accounts-evm"
+import type { SignTypedDataParams } from "liquid-accounts-evm"
 
 const wallet = new ethers.Wallet(privateKey)
 
-// Create signMessage callback that formats as EIP-712
-const signMessage = async (payload: Uint8Array) => {
-  const message = formatEIP712Message(payload)
-  return wallet.signTypedData(EIP712_DOMAIN, EIP712_TYPES, message)
+// signMessage receives all EIP-712 data — just forward to signTypedData
+const signMessage = async ({ domain, types, message }: SignTypedDataParams) => {
+  return wallet.signTypedData(domain, types, message)
 }
 
 const { addr, signer } = await sdk.getSigner({
@@ -106,16 +105,8 @@ const { addr, signer } = await sdk.getSigner({
 Or with MetaMask:
 
 ```typescript
-import { formatEIP712Message, EIP712_DOMAIN, EIP712_TYPES } from "liquid-accounts-evm"
-
-const signMessage = async (payload: Uint8Array) => {
-  const message = formatEIP712Message(payload)
-  const data = JSON.stringify({
-    domain: EIP712_DOMAIN,
-    types: EIP712_TYPES,
-    message,
-    primaryType: "AlgorandTransaction"
-  })
+const signMessage = async ({ domain, types, primaryType, message }: SignTypedDataParams) => {
+  const data = JSON.stringify({ domain, types, primaryType, message })
   return provider.send("eth_signTypedData_v4", [evmAddress, data])
 }
 
@@ -161,7 +152,7 @@ For full control over transaction construction and group ID assignment, use `sig
 
 ```typescript
 import algosdk from "algosdk"
-import { formatEIP712Message, EIP712_DOMAIN, EIP712_TYPES } from "liquid-accounts-evm"
+import type { SignTypedDataParams } from "liquid-accounts-evm"
 
 const addr = await sdk.getAddress({ evmAddress })
 
@@ -172,9 +163,8 @@ const txn = await algorand.createTransaction.payment({
 })
 const [gtxn] = algosdk.assignGroupID([txn])
 
-const signMessage = async (payload: Uint8Array) => {
-  const message = formatEIP712Message(payload)
-  return wallet.signTypedData(EIP712_DOMAIN, EIP712_TYPES, message)
+const signMessage = async ({ domain, types, message }: SignTypedDataParams) => {
+  return wallet.signTypedData(domain, types, message)
 }
 
 const [signed] = await sdk.signTxn({
@@ -190,7 +180,7 @@ await algorand.client.algod.sendRawTransaction(signed).do()
 
 ```typescript
 import algosdk from "algosdk"
-import { formatEIP712Message, EIP712_DOMAIN, EIP712_TYPES, LiquidEvmSdk } from "liquid-accounts-evm"
+import { LiquidEvmSdk, buildTypedData } from "liquid-accounts-evm"
 
 const addr = await sdk.getAddress({ evmAddress })
 
@@ -203,8 +193,8 @@ const [gtxn] = algosdk.assignGroupID([txn])
 
 // Pre-compute the signature
 const payload = LiquidEvmSdk.getSignPayload([gtxn])
-const message = formatEIP712Message(payload)
-const signature = await wallet.signTypedData(EIP712_DOMAIN, EIP712_TYPES, message)
+const { domain, types, message } = buildTypedData(payload)
+const signature = await wallet.signTypedData(domain, types, message)
 
 // Sign using pre-computed signature
 const [signed] = await sdk.signTxn({
@@ -233,7 +223,7 @@ Returns the Algorand lsig address for the given EVM address. The `evmAddress` sh
 Returns the Algorand address and a `TransactionSigner` that can be passed directly to any algokit-utils send method.
 
 - `evmAddress` — hex string (with or without `0x` prefix)
-- `signMessage` — `(payload: Uint8Array) => Promise<string>` — receives the raw transaction/group ID and should return an EIP-712 signature. Use `formatEIP712Message(payload)` helper to format the payload as EIP-712 typed data.
+- `signMessage` — `(typedData: SignTypedDataParams) => Promise<string>` — receives the full EIP-712 typed data (domain, types, primaryType, message) and should return the signature.
 
 The signer automatically determines what to sign: the transaction ID for standalone transactions, or the group ID for atomic groups.
 
@@ -245,7 +235,7 @@ Signs one or more algosdk `Transaction` objects with the EVM lsig. Returns an ar
 **Parameters:**
 - `evmAddress` — hex string (with or without `0x` prefix)
 - `txns` — algosdk `Transaction[]` to sign (must already have group ID assigned via `algosdk.assignGroupID` if grouped)
-- `signMessage` — (variant 1) `(payload: Uint8Array) => Promise<string>` — receives the raw transaction/group ID and should return an EIP-712 signature
+- `signMessage` — (variant 1) `(typedData: SignTypedDataParams) => Promise<string>` — receives the full EIP-712 typed data and should return the signature
 - `signature` — (variant 2) `string` — pre-computed EIP-712 signature (0x-prefixed 65-byte hex string)
 
 The payload signed is the group ID if there are more than 1 transactions, otherwise the transaction ID.
@@ -262,7 +252,35 @@ const signature = await getSignature(payload)
 await sdk.signTxn({ evmAddress, txns, signature })
 ```
 
+### Types
+
+#### `SignTypedDataParams`
+
+Interface for the EIP-712 typed data passed to `signMessage` callbacks:
+
+```typescript
+interface SignTypedDataParams {
+  domain: { name: string; version: string; chainId: number }
+  types: {
+    EIP712Domain: Array<{ name: string; type: string }>
+    AlgorandTransaction: Array<{ name: string; type: string }>
+  }
+  primaryType: "AlgorandTransaction"
+  message: { "Transaction ID": string }
+}
+```
+
 ### Utilities
+
+#### `buildTypedData(payload: Uint8Array): SignTypedDataParams`
+
+Builds a complete EIP-712 typed data object from a raw transaction/group ID payload. Useful when pre-computing signatures outside the SDK callbacks.
+
+```typescript
+const payload = LiquidEvmSdk.getSignPayload(txns)
+const { domain, types, message } = buildTypedData(payload)
+const signature = await wallet.signTypedData(domain, types, message)
+```
 
 #### `formatEIP712Message(payload: Uint8Array): { "Transaction ID": string }`
 

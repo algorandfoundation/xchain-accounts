@@ -53,7 +53,7 @@ The LogicSig uses [EIP-712](https://eips.ethereum.org/EIPS/eip-712) typed struct
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/liquid-accounts.git
+git clone https://github.com/tasosbit/liquid-accounts.git
 cd liquid-accounts
 
 # Bootstrap the project (installs dependencies)
@@ -104,7 +104,7 @@ pnpm add liquid-accounts-evm
 Basic usage:
 
 ```typescript
-import { LiquidEvmSdk, formatEIP712Message, EIP712_DOMAIN, EIP712_TYPES } from 'liquid-accounts-evm'
+import { LiquidEvmSdk } from 'liquid-accounts-evm'
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
 
 // Initialize
@@ -113,20 +113,15 @@ const sdk = new LiquidEvmSdk({ algorand })
 
 // Get Algorand address for an EVM address
 const algoAddress = await sdk.getAddress({
-  evmAddress: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb'
+  evmAddress: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb2'
 })
 
 // Get a transaction signer (EIP-712 typed data signing)
+const evmAddress = '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb2'
 const { addr, signer } = await sdk.getSigner({
-  evmAddress: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb',
-  signMessage: async (payload) => {
-    const message = formatEIP712Message(payload)
-    const data = JSON.stringify({
-      domain: EIP712_DOMAIN,
-      types: EIP712_TYPES,
-      message,
-      primaryType: "AlgorandTransaction"
-    })
+  evmAddress,
+  signMessage: async ({ domain, types, primaryType, message }) => {
+    const data = JSON.stringify({ domain, types, primaryType, message })
     return window.ethereum.request({
       method: 'eth_signTypedData_v4',
       params: [evmAddress, data]

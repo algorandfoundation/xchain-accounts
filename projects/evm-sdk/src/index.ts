@@ -1,13 +1,9 @@
 import type { AlgorandClient } from "@algorandfoundation/algokit-utils"
 import algosdk from "algosdk"
-import { ALGO_FUNDING_LSIG_TEAL } from "./teal"
+import { LIQUID_EVM_LSIG_TEAL } from "./teal"
 import {
-  ALGORAND_CHAIN_ID,
-  ALGORAND_CHAIN_ID_HEX,
-  ALGORAND_EVM_CHAIN_CONFIG,
-  EIP712_DOMAIN,
-  EIP712_TYPES,
-  formatEIP712Message,
+  SignTypedDataParams,
+  buildTypedData,
   hexToBytes,
   parseEvmSignature,
 } from "./utils"
@@ -17,10 +13,12 @@ export {
   ALGORAND_EVM_CHAIN_CONFIG,
   EIP712_DOMAIN,
   EIP712_TYPES,
+  buildTypedData,
   formatEIP712Message,
   hexToBytes,
   parseEvmSignature,
 } from "./utils"
+export type { SignTypedDataParams } from "./utils"
 
 export class LiquidEvmSdk {
   private algorand: AlgorandClient
@@ -37,7 +35,7 @@ export class LiquidEvmSdk {
   private async getCompiled(evmAddress: string): Promise<Uint8Array> {
     const normalized = LiquidEvmSdk.normalizeAddress(evmAddress)
     if (!this.compiledCache.has(normalized)) {
-      const result = await this.algorand.app.compileTealTemplate(ALGO_FUNDING_LSIG_TEAL, {
+      const result = await this.algorand.app.compileTealTemplate(LIQUID_EVM_LSIG_TEAL, {
         TMPL_OWNER: hexToBytes(normalized),
       })
       this.compiledCache.set(normalized, result.compiledBase64ToBytes)
@@ -67,18 +65,18 @@ export class LiquidEvmSdk {
    *
    * @param evmAddress - hex EVM address (with or without 0x prefix)
    * @param txns - algosdk Transaction(s) to sign (must already have group ID assigned if grouped)
-   * @param signMessage - callback that receives the raw transaction/group ID payload and should
-   *   return an EIP-712 signature. The callback should format the payload as EIP-712 typed data
-   *   and call `eth_signTypedData_v4`. Use `formatEIP712Message(payload)` helper to format.
+   * @param signMessage - callback that receives the full EIP-712 typed data (domain, types,
+   *   primaryType, message) and should return the signature. Pass the typed data directly to
+   *   `eth_signTypedData_v4` or `signTypedData`.
    * @returns array of signed transaction blobs (Uint8Array[])
    *
    * @example
    * ```typescript
-   * import { formatEIP712Message, EIP712_DOMAIN, EIP712_TYPES } from "liquid-accounts-evm"
+   * import type { SignTypedDataParams } from "liquid-accounts-evm"
    *
-   * const signMessage = async (payload: Uint8Array) => {
-   *   const message = formatEIP712Message(payload)
-   *   return wallet.signTypedData(EIP712_DOMAIN, EIP712_TYPES, message)
+   * // With ethers.js
+   * const signMessage = async ({ domain, types, message }: SignTypedDataParams) => {
+   *   return wallet.signTypedData(domain, types, message)
    * }
    *
    * const signed = await sdk.signTxn({ evmAddress, txns, signMessage })
@@ -87,7 +85,7 @@ export class LiquidEvmSdk {
   async signTxn(params: {
     evmAddress: string
     txns: algosdk.Transaction[]
-    signMessage: (message: Uint8Array) => Promise<string>
+    signMessage: (typedData: SignTypedDataParams) => Promise<string>
   }): Promise<Uint8Array[]>
 
   /**
@@ -103,8 +101,8 @@ export class LiquidEvmSdk {
    * @example
    * ```typescript
    * const payload = LiquidEvmSdk.getSignPayload(txns)
-   * const message = formatEIP712Message(payload)
-   * const signature = await wallet.signTypedData(EIP712_DOMAIN, EIP712_TYPES, message)
+   * const typedData = buildTypedData(payload)
+   * const signature = await wallet.signTypedData(typedData.domain, typedData.types, typedData.message)
    *
    * const signed = await sdk.signTxn({ evmAddress, txns, signature })
    * ```
@@ -123,7 +121,7 @@ export class LiquidEvmSdk {
   }: {
     evmAddress: string
     txns: algosdk.Transaction[]
-    signMessage?: (message: Uint8Array) => Promise<string>
+    signMessage?: (typedData: SignTypedDataParams) => Promise<string>
     signature?: string
   }): Promise<Uint8Array[]> {
     const compiled = await this.getCompiled(evmAddress)
@@ -133,7 +131,7 @@ export class LiquidEvmSdk {
       evmSig = signature
     } else if (signMessage) {
       const payload = LiquidEvmSdk.getSignPayload(txns)
-      evmSig = await signMessage(payload)
+      evmSig = await signMessage(buildTypedData(payload))
     } else {
       throw new Error("Either signMessage or signature must be provided")
     }
@@ -148,18 +146,17 @@ export class LiquidEvmSdk {
    * Get an algokit-utils compatible TransactionSigner for the given EVM address using EIP-712 typed data signing.
    *
    * @param evmAddress - hex EVM address (with or without 0x prefix)
-   * @param signMessage - callback that receives the raw transaction/group ID payload and should
-   *   return an EIP-712 signature. The callback should format the payload as EIP-712 typed data
-   *   and call `eth_signTypedData_v4`. Use `formatEIP712Message(payload)` helper to format.
+   * @param signMessage - callback that receives the full EIP-712 typed data (domain, types,
+   *   primaryType, message) and should return the signature. Pass the typed data directly to
+   *   `eth_signTypedData_v4` or `signTypedData`.
    * @returns `{ addr, signer }` — pass directly as `sender` + `signer` to algokit-utils methods
    *
    * @example
    * ```typescript
-   * import { formatEIP712Message, EIP712_DOMAIN, EIP712_TYPES } from "liquid-accounts-evm"
+   * import type { SignTypedDataParams } from "liquid-accounts-evm"
    *
-   * const signMessage = async (payload: Uint8Array) => {
-   *   const message = formatEIP712Message(payload)
-   *   return wallet.signTypedData(EIP712_DOMAIN, EIP712_TYPES, message)
+   * const signMessage = async ({ domain, types, message }: SignTypedDataParams) => {
+   *   return wallet.signTypedData(domain, types, message)
    * }
    *
    * const { addr, signer } = await sdk.getSigner({ evmAddress, signMessage })
@@ -170,7 +167,7 @@ export class LiquidEvmSdk {
     signMessage,
   }: {
     evmAddress: string
-    signMessage: (message: Uint8Array) => Promise<string>
+    signMessage: (typedData: SignTypedDataParams) => Promise<string>
   }): Promise<{ addr: string; signer: algosdk.TransactionSigner }> {
     const compiled = await this.getCompiled(evmAddress)
     const lsig = new algosdk.LogicSigAccount(compiled, [])
@@ -180,7 +177,7 @@ export class LiquidEvmSdk {
       // Get the payload (group ID for grouped txns, txn ID for standalone)
       const payload = LiquidEvmSdk.getSignPayload(txnGroup)
 
-      const evmSig = await signMessage(payload)
+      const evmSig = await signMessage(buildTypedData(payload))
       const sigBytes = parseEvmSignature(evmSig)
       const signedLsig = new algosdk.LogicSigAccount(compiled, [sigBytes])
 

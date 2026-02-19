@@ -3,7 +3,8 @@ import { registerDebugEventHandlers } from '@algorandfoundation/algokit-utils-de
 import { algorandFixture } from '@algorandfoundation/algokit-utils/testing'
 import algosdk from 'algosdk'
 import { ethers } from 'ethers'
-import { EIP712_DOMAIN, EIP712_TYPES, formatEIP712Message, LiquidEvmSdk } from 'liquid-accounts-evm'
+import { LiquidEvmSdk, buildTypedData } from 'liquid-accounts-evm'
+import type { SignTypedDataParams } from 'liquid-accounts-evm'
 import { beforeAll, beforeEach, describe, expect, test } from 'vitest'
 
 // Fixed EVM test wallet (DO NOT use in production)
@@ -12,10 +13,11 @@ const evmWallet = new ethers.Wallet(EVM_PRIVATE_KEY)
 const CORRECT_ETH_ACCOUNT = evmWallet.address
 const WRONG_ETH_ACCOUNT = '0x0000000000000000000000000000000000000000'
 
-// EIP-712 signing helper - formats payload as EIP-712 and signs
-const signMessage = async (payload: Uint8Array) => {
-  const message = formatEIP712Message(payload)
-  return evmWallet.signTypedData(EIP712_DOMAIN, EIP712_TYPES, message)
+// EIP-712 signing helper - receives typed data from SDK and signs
+// ethers.js v6 derives EIP712Domain from the domain parameter, so strip it from types
+const signMessage = async ({ domain, types, message }: SignTypedDataParams) => {
+  const { EIP712Domain: _, ...signingTypes } = types
+  return evmWallet.signTypedData(domain, signingTypes, message)
 }
 
 describe('LogicSig EVM signature validation', () => {
@@ -106,7 +108,7 @@ describe('LogicSig EVM signature validation', () => {
 
       // Pre-compute the signature
       const payload = LiquidEvmSdk.getSignPayload([gtxn])
-      const signature = await signMessage(payload)
+      const signature = await signMessage(buildTypedData(payload))
 
       // Sign using pre-computed signature
       const [signed] = await sdk.signTxn({
@@ -215,7 +217,7 @@ describe('LogicSig EVM signature validation', () => {
 
       // Get a valid signature
       const payload = LiquidEvmSdk.getSignPayload([gtxn])
-      const validSig = await signMessage(payload)
+      const validSig = await signMessage(buildTypedData(payload))
 
       // Parse signature
       const sigBytes = new Uint8Array(65)
@@ -258,7 +260,7 @@ describe('LogicSig EVM signature validation', () => {
 
       // Get a valid signature
       const payload = LiquidEvmSdk.getSignPayload([gtxn])
-      const validSig = await signMessage(payload)
+      const validSig = await signMessage(buildTypedData(payload))
 
       // Parse signature
       const sigBytes = new Uint8Array(65)
@@ -301,7 +303,7 @@ describe('LogicSig EVM signature validation', () => {
 
       // Get a valid signature
       const payload = LiquidEvmSdk.getSignPayload([gtxn])
-      const validSig = await signMessage(payload)
+      const validSig = await signMessage(buildTypedData(payload))
 
       // Parse signature
       const sigBytes = new Uint8Array(65)
@@ -344,7 +346,7 @@ describe('LogicSig EVM signature validation', () => {
 
       // Get a valid signature
       const payload = LiquidEvmSdk.getSignPayload([gtxn])
-      const validSig = await signMessage(payload)
+      const validSig = await signMessage(buildTypedData(payload))
 
       // Parse signature
       const sigBytes = new Uint8Array(65)
@@ -387,7 +389,7 @@ describe('LogicSig EVM signature validation', () => {
 
       // Get a valid signature
       const payload = LiquidEvmSdk.getSignPayload([gtxn])
-      const validSig = await signMessage(payload)
+      const validSig = await signMessage(buildTypedData(payload))
 
       // Parse signature
       const sigBytes = new Uint8Array(65)
@@ -428,7 +430,7 @@ describe('LogicSig EVM signature validation', () => {
 
       // Get a valid signature
       const payload = LiquidEvmSdk.getSignPayload([gtxn])
-      const validSig = await signMessage(payload)
+      const validSig = await signMessage(buildTypedData(payload))
 
       // Parse signature
       const sigBytes = new Uint8Array(65)
@@ -505,7 +507,7 @@ describe('LogicSig EVM signature validation', () => {
 
       // Get a valid signature
       const payload = LiquidEvmSdk.getSignPayload([gtxn])
-      const validSig = await signMessage(payload)
+      const validSig = await signMessage(buildTypedData(payload))
 
       // Truncate signature (remove last 4 hex chars = 2 bytes)
       // SDK will parse and zero-pad, resulting in invalid signature
@@ -540,7 +542,7 @@ describe('LogicSig EVM signature validation', () => {
 
       // Get a normal signature
       const payload = LiquidEvmSdk.getSignPayload([gtxn])
-      const normalSig = await signMessage(payload)
+      const normalSig = await signMessage(buildTypedData(payload))
 
       // Parse and extract s value
       const sigBytes = new Uint8Array(65)

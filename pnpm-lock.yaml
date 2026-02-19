@@ -201,9 +201,15 @@ importers:
         specifier: file:../evm-sdk
         version: link:../evm-sdk
     devDependencies:
+      '@cloudflare/workers-types':
+        specifier: ^4
+        version: 4.20260219.0
+      typescript:
+        specifier: ^5
+        version: 5.9.3
       wrangler:
         specifier: ^4
-        version: 4.66.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+        version: 4.66.0(@cloudflare/workers-types@4.20260219.0)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
 
   projects/use-wallet:
     devDependencies:
@@ -332,7 +338,7 @@ importers:
         specifier: 8.55.0
         version: 8.55.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
 
-  projects/use-wallet-ui/packages/extension:
+  projects/use-wallet-ui/packages/liquid-companion-extension:
     dependencies:
       '@d13co/liquid-ui':
         specifier: workspace:*
@@ -1015,6 +1021,9 @@ packages:
     engines: {node: '>=16'}
     cpu: [x64]
     os: [win32]
+
+  '@cloudflare/workers-types@4.20260219.0':
+    resolution: {integrity: sha512-jL2BNnDqbKXDrxhtKx+wVmQpv/P6w8J4WVFiuT9OMEPsw8V2TfTozoWTcCZ2AhE09yK406xQFE4mBq9IIgobuw==}
 
   '@coinbase/cdp-sdk@1.44.0':
     resolution: {integrity: sha512-0I5O1DzbchR91GAYQAU8lxx6q9DBvN0no9IBwrTKLHW8t5bABMg8dzQ/jrGRd6lr/QFJJW4L0ZSLGae5jsxGWw==}
@@ -9600,6 +9609,8 @@ snapshots:
 
   '@cloudflare/workerd-windows-64@1.20260217.0':
     optional: true
+
+  '@cloudflare/workers-types@4.20260219.0': {}
 
   '@coinbase/cdp-sdk@1.44.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)':
     dependencies:
@@ -20709,7 +20720,7 @@ snapshots:
       '@cloudflare/workerd-linux-arm64': 1.20260217.0
       '@cloudflare/workerd-windows-64': 1.20260217.0
 
-  wrangler@4.66.0(bufferutil@4.1.0)(utf-8-validate@5.0.10):
+  wrangler@4.66.0(@cloudflare/workers-types@4.20260219.0)(bufferutil@4.1.0)(utf-8-validate@5.0.10):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.4.2
       '@cloudflare/unenv-preset': 2.13.0(unenv@2.0.0-rc.24)(workerd@1.20260217.0)
@@ -20720,6 +20731,7 @@ snapshots:
       unenv: 2.0.0-rc.24
       workerd: 1.20260217.0
     optionalDependencies:
+      '@cloudflare/workers-types': 4.20260219.0
       fsevents: 2.3.3
     transitivePeerDependencies:
       - bufferutil

@@ -58,7 +58,7 @@ export class LiquidEvmLsig extends LogicSig {
 
     // EIP-712 Final Digest
     // digest = keccak256("\x19\x01" + domainSeparator + messageHash)
-    // TODO optimize: concat 1901 with domainSeparator since both are constants
+    // Seeming inefficiency is optimized by puya -  0x1901 is concatted with domainSeparator since both are constants
     const digest = op.keccak256(Bytes.fromHex('1901').concat(domainSeparator).concat(messageHash))
 
     // Recover the signer's public key from the signature using ECDSA secp256k1
