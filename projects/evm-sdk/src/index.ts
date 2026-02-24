@@ -53,6 +53,9 @@ export class LiquidEvmSdk {
 
   /** Get the payload for the EVM wallet to sign. Group ID if group.length > 1, otherwise Txn ID */
   static getSignPayload(txnGroup: algosdk.Transaction[]): Uint8Array {
+    if (txnGroup.length === 0) {
+      throw new Error("Cannot get sign payload from empty transaction group")
+    }
     // For grouped txns of more than 1, sign the group ID; for standalone sign the txn ID
     return txnGroup.length > 1 ? txnGroup[0].group! : txnGroup[0].rawTxID()
   }
