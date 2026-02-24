@@ -76,7 +76,13 @@ export default {
     }
 
     if (body.method === "eth_blockNumber") {
-      return json({ jsonrpc: "2.0", id: body.id ?? null, result: "0x1" });
+      try {
+        const status = await algorand.client.algod.status().do();
+        const round = BigInt(status.lastRound);
+        return json({ jsonrpc: "2.0", id: body.id ?? null, result: "0x" + round.toString(16) });
+      } catch {
+        return json({ jsonrpc: "2.0", id: body.id ?? null, result: "0x1" });
+      }
     }
 
     if (body.method === "eth_getBalance") {
@@ -94,6 +100,22 @@ export default {
       } catch (e: unknown) {
         console.log(`eth_getBalance error for ${evmAddress}: ${e}`);
         return json({ jsonrpc: "2.0", id: body.id ?? null, result: "0x0" });
+      }
+    }
+
+    if (body.method === "eth_getCode") {
+      const address = body.params?.[0] as string | undefined;
+      if (!address) {
+        return json({ jsonrpc: "2.0", id: body.id ?? null, error: { code: -32602, message: "Missing address parameter" } });
+      }
+      try {
+        const asaId = addressToAsaId(address);
+        await algorand.client.algod.getAssetByID(asaId).do();
+        // Valid ASA — return a minimal non-empty bytecode stub so MetaMask recognizes it as a contract
+        return json({ jsonrpc: "2.0", id: body.id ?? null, result: "0xfe" });
+      } catch {
+        // Not a valid ASA — return empty (EOA)
+        return json({ jsonrpc: "2.0", id: body.id ?? null, result: "0x" });
       }
     }
 
