@@ -265,7 +265,7 @@ function NetworkSelector({ network, setNetwork }: { network: AlgorandNetwork; se
   );
 }
 
-function ThemeToggle({ theme, setTheme }: { theme: Theme; setTheme: (t: Theme) => void }) {
+function ThemeToggle({ theme, setTheme, style }: { theme: Theme; setTheme: (t: Theme) => void; style?: React.CSSProperties }) {
   const next = theme === "light" ? "dark" : "light";
   return (
     <button
@@ -282,6 +282,7 @@ function ThemeToggle({ theme, setTheme }: { theme: Theme; setTheme: (t: Theme) =
         background: "transparent",
         border: "1px solid #666",
         cursor: "pointer",
+        ...style,
         fontSize: 18,
         lineHeight: 1,
       }}
@@ -301,9 +302,11 @@ interface AppProps {
 export default function App({ theme, setTheme, network, setNetwork }: AppProps) {
   return (
     <div className="container">
-      <div style={{ display: "flex", alignItems: "center", gap: 8, alignSelf: "flex-end", flexWrap: "wrap", justifyContent: "flex-end" }}>
+      <div
+        style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", alignItems: "center", justifyItems: "center", gap: 8, alignSelf: "stretch" }}
+      >
+        <ThemeToggle theme={theme} setTheme={setTheme} style={{ justifySelf: "start" }} />
         <NetworkSelector network={network} setNetwork={setNetwork} />
-        <ThemeToggle theme={theme} setTheme={setTheme} />
         <WalletButton />
       </div>
       <h1>Liquid EVM Accounts</h1>
