@@ -25,12 +25,16 @@ A LogicSig is a stateless smart contract on Algorand that can authorize transact
 ## Project Structure
 
 ```
-evm-logicsig/
+projects/evm/
 ├── smart_contracts/
 │   ├── liquidevm/
 │   │   ├── logicsig.algo.ts        # Main LogicSig contract
 │   │   └── logicsig.e2e.spec.ts    # E2E tests
 │   ├── artifacts/                   # Compiled TEAL output
+├── src/                            # SDK Source code
+│   ├── index.ts                    # LiquidEvmSdk
+│   ├── teal.ts                     # Embedded TEAL bytecode
+│   └── utils.ts                    # EIP-712 and ECDSA utils
 ```
 
 ## How the Contract Works
@@ -117,7 +121,7 @@ The project includes comprehensive E2E tests that verify:
 - Atomic group transaction signing
 - Template variable substitution
 
-> **Important**: The tests use the [liquid-accounts-evm SDK](../evm-sdk/), which must be built before running tests. If you modify the LogicSig contract, rebuild both the contract and the SDK for changes to be reflected in tests:
+> **Important**: Rebuild the contract to ensure changes are reflected in the SDK and tests:
 >
 > ```bash
 > # From repository root
@@ -133,12 +137,12 @@ npm test              # Run all tests
 npm run test:watch    # Watch mode
 ```
 
-The test suite uses:
+The project uses:
 
 - **vitest** for test execution
 - **@noble/secp256k1** for generating test EVM signatures
 - **AlgoKit Utils** for interacting with LocalNet
-- **liquid-accounts-evm** for LogicSig compilation and signing
+- **avm-x-evm** (this package) for LogicSig compilation and signing
 
 ### Deploying
 
@@ -192,14 +196,14 @@ The type byte enables future composition of multiple authentication methods with
 - **Template immutability**: Once compiled, the owner address cannot be changed
 - **Transaction binding**: Signatures are bound to specific transactions via txnId/groupId
 
-## Usage with SDK
+## Usage
 
-See the [liquid-accounts-evm SDK](../evm-sdk/README.md) for integration examples.
+The SDK handles LogicSig compilation and transaction signing.
 
 Quick example:
 
 ```typescript
-import { LiquidEvmSdk } from 'liquid-accounts-evm'
+import { LiquidEvmSdk } from 'avm-x-evm'
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
 
 const algorand = AlgorandClient.fromEnvironment()
