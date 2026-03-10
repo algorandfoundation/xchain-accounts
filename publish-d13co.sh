@@ -45,7 +45,7 @@ PACKAGE_JSONS=(
   # "$ROOT/projects/use-wallet/packages/use-wallet-solid/package.json"
   # "$ROOT/projects/use-wallet/packages/use-wallet-svelte/package.json"
   # use-wallet-ui packages
-  "$ROOT/projects/use-wallet-ui/packages/liquid-ui/package.json"
+  "$ROOT/projects/use-wallet-ui/packages/algo-x-evm-ui/package.json"
   "$ROOT/projects/use-wallet-ui/packages/react/package.json"
 )
 
@@ -56,7 +56,7 @@ PUBLISH_DIRS=(
   # "$ROOT/projects/use-wallet/packages/use-wallet-vue"
   # "$ROOT/projects/use-wallet/packages/use-wallet-solid"
   # "$ROOT/projects/use-wallet/packages/use-wallet-svelte"
-  "$ROOT/projects/use-wallet-ui/packages/liquid-ui"
+  "$ROOT/projects/use-wallet-ui/packages/algo-x-evm-ui"
   "$ROOT/projects/use-wallet-ui/packages/react"
 )
 

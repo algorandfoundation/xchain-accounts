@@ -22,7 +22,7 @@ Use npm aliases to install the experimental `@d13co` builds under the `@txnlab` 
 pnpm add @txnlab/use-wallet@npm:@d13co/use-wallet@latest \
          @txnlab/use-wallet-react@npm:@d13co/use-wallet-react@latest \
          @txnlab/use-wallet-ui-react@npm:@d13co/use-wallet-ui-react@latest \
-         liquid-accounts-evm@latest @d13co/liquid-ui@latest \
+         liquid-accounts-evm@latest @d13co/algo-x-evm-ui@latest \
          @rainbow-me/rainbowkit wagmi@2 @wagmi/core@2 viem @tanstack/react-query
 ```
 
@@ -31,7 +31,7 @@ pnpm add @txnlab/use-wallet@npm:@d13co/use-wallet@latest \
 npm install @txnlab/use-wallet@npm:@d13co/use-wallet@latest \
             @txnlab/use-wallet-react@npm:@d13co/use-wallet-react@latest \
             @txnlab/use-wallet-ui-react@npm:@d13co/use-wallet-ui-react@latest \
-            liquid-accounts-evm@latest @d13co/liquid-ui@latest \
+            liquid-accounts-evm@latest @d13co/algo-x-evm-ui@latest \
             @rainbow-me/rainbowkit wagmi@2 @wagmi/core@2 viem @tanstack/react-query
 ```
 
@@ -40,7 +40,7 @@ npm install @txnlab/use-wallet@npm:@d13co/use-wallet@latest \
 yarn add @txnlab/use-wallet@npm:@d13co/use-wallet@latest \
          @txnlab/use-wallet-react@npm:@d13co/use-wallet-react@latest \
          @txnlab/use-wallet-ui-react@npm:@d13co/use-wallet-ui-react@latest \
-         liquid-accounts-evm@latest @d13co/liquid-ui@latest \
+         liquid-accounts-evm@latest @d13co/algo-x-evm-ui@latest \
          @rainbow-me/rainbowkit wagmi@2 @wagmi/core@2 viem @tanstack/react-query
 ```
 
