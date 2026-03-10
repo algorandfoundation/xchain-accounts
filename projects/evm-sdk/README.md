@@ -1,4 +1,4 @@
-# liquid-accounts-evm
+# algo-x-evm-sdk
 
 Use EVM wallets (MetaMask, etc.) to sign and send Algorand transactions using **EIP-712 typed structured data**.
 
@@ -7,7 +7,7 @@ The SDK compiles a per-address [logic signature](https://dev.algorand.co/concept
 ## Install
 
 ```bash
-npm install liquid-accounts-evm
+npm install algo-x-evm-sdk
 ```
 
 Peer dependencies:
@@ -60,11 +60,11 @@ The logic signature:
 
 ```typescript
 import { AlgorandClient } from "@algorandfoundation/algokit-utils"
-import { LiquidEvmSdk, EIP712_DOMAIN, EIP712_TYPES } from "liquid-accounts-evm"
+import { AlgoXEvmSdk, EIP712_DOMAIN, EIP712_TYPES } from "algo-x-evm-sdk"
 import { BrowserProvider } from "ethers"
 
 const algorand = AlgorandClient.fromEnvironment()
-const sdk = new LiquidEvmSdk({ algorand })
+const sdk = new AlgoXEvmSdk({ algorand })
 
 // MetaMask or other EVM wallet provider
 const provider = new BrowserProvider(window.ethereum)
@@ -86,7 +86,7 @@ This is useful for checking balances or displaying the address before any signin
 
 ```typescript
 import { ethers } from "ethers"
-import type { SignTypedDataParams } from "liquid-accounts-evm"
+import type { SignTypedDataParams } from "algo-x-evm-sdk"
 
 const wallet = new ethers.Wallet(privateKey)
 
@@ -151,7 +151,7 @@ For full control over transaction construction and group ID assignment, use `sig
 
 ```typescript
 import algosdk from "algosdk"
-import type { SignTypedDataParams } from "liquid-accounts-evm"
+import type { SignTypedDataParams } from "algo-x-evm-sdk"
 
 const addr = await sdk.getAddress({ evmAddress })
 
@@ -179,7 +179,7 @@ await algorand.client.algod.sendRawTransaction(signed).do()
 
 ```typescript
 import algosdk from "algosdk"
-import { LiquidEvmSdk, buildTypedData } from "liquid-accounts-evm"
+import { AlgoXEvmSdk, buildTypedData } from "algo-x-evm-sdk"
 
 const addr = await sdk.getAddress({ evmAddress })
 
@@ -191,7 +191,7 @@ const txn = await algorand.createTransaction.payment({
 const [gtxn] = algosdk.assignGroupID([txn])
 
 // Pre-compute the signature
-const payload = LiquidEvmSdk.getSignPayload([gtxn])
+const payload = AlgoXEvmSdk.getSignPayload([gtxn])
 const { domain, types, message } = buildTypedData(payload)
 const signature = await wallet.signTypedData(domain, types, message)
 
@@ -207,7 +207,7 @@ await algorand.client.algod.sendRawTransaction(signed).do()
 
 ## API
 
-### `LiquidEvmSdk`
+### `AlgoXEvmSdk`
 
 #### `constructor({ algorand: AlgorandClient })`
 
@@ -246,7 +246,7 @@ await sdk.signTxn({ evmAddress, txns, signMessage })
 
 **Example with pre-computed signature:**
 ```typescript
-const payload = LiquidEvmSdk.getSignPayload(txns)
+const payload = AlgoXEvmSdk.getSignPayload(txns)
 const signature = await getSignature(payload)
 await sdk.signTxn({ evmAddress, txns, signature })
 ```
@@ -276,7 +276,7 @@ interface SignTypedDataParams {
 Builds a complete EIP-712 typed data object from a raw transaction/group ID payload. Useful when pre-computing signatures outside the SDK callbacks.
 
 ```typescript
-const payload = LiquidEvmSdk.getSignPayload(txns)
+const payload = AlgoXEvmSdk.getSignPayload(txns)
 const { domain, types, message } = buildTypedData(payload)
 const signature = await wallet.signTypedData(domain, types, message)
 ```

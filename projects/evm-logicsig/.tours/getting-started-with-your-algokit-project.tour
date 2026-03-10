@@ -23,12 +23,12 @@
       "line": 32
     },
     {
-      "file": "smart_contracts/liquidevm/contact.spec.ts",
+      "file": "smart_contracts/algo-x-evm/contact.spec.ts",
       "description": "The default tests provided demonstrate an example of setting up in-memory fast unit tests with the Algorand TypeScript testing library that mocks AVM functionality.",
       "line": 5
     },
     {
-      "file": "smart_contracts/liquidevm/contact.e2e.spec.ts",
+      "file": "smart_contracts/algo-x-evm/contact.e2e.spec.ts",
       "description": "The default tests provided demonstrate an example of setting up an end-to-end test with fixtures, and testing smart contract calls against a LocalNet network via an AlgoKit typed client.",
       "line": 7
     },

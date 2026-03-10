@@ -3,8 +3,8 @@ import { registerDebugEventHandlers } from '@algorandfoundation/algokit-utils-de
 import { algorandFixture } from '@algorandfoundation/algokit-utils/testing'
 import algosdk from 'algosdk'
 import { ethers } from 'ethers'
-import { LiquidEvmSdk, buildTypedData } from 'liquid-accounts-evm'
-import type { SignTypedDataParams } from 'liquid-accounts-evm'
+import { AlgoXEvmSdk, buildTypedData } from 'algo-x-evm-sdk'
+import type { SignTypedDataParams } from 'algo-x-evm-sdk'
 import { beforeAll, beforeEach, describe, expect, test } from 'vitest'
 
 // Fixed EVM test wallet (DO NOT use in production)
@@ -33,7 +33,7 @@ describe('LogicSig EVM signature validation', () => {
   describe('standalone transaction (TxID)', () => {
     test('approves when signature matches the templated EVM account', async () => {
       const { algorand } = localnet
-      const sdk = new LiquidEvmSdk({ algorand })
+      const sdk = new AlgoXEvmSdk({ algorand })
       const { addr, signer } = await sdk.getSigner({ evmAddress: CORRECT_ETH_ACCOUNT, signMessage })
 
       await algorand.account.ensureFundedFromEnvironment(addr, (1).algos())
@@ -49,7 +49,7 @@ describe('LogicSig EVM signature validation', () => {
 
     test('rejects when templated EVM account does not match signer', async () => {
       const { algorand } = localnet
-      const sdk = new LiquidEvmSdk({ algorand })
+      const sdk = new AlgoXEvmSdk({ algorand })
       const { addr, signer } = await sdk.getSigner({ evmAddress: WRONG_ETH_ACCOUNT, signMessage })
 
       await algorand.account.ensureFundedFromEnvironment(addr, (1).algos())
@@ -69,7 +69,7 @@ describe('LogicSig EVM signature validation', () => {
   describe('single transaction, grouped (Group ID)', () => {
     test('approves when signature matches the templated EVM account', async () => {
       const { algorand } = localnet
-      const sdk = new LiquidEvmSdk({ algorand })
+      const sdk = new AlgoXEvmSdk({ algorand })
       const addr = await sdk.getAddress({ evmAddress: CORRECT_ETH_ACCOUNT })
 
       await algorand.account.ensureFundedFromEnvironment(addr, (1).algos())
@@ -93,7 +93,7 @@ describe('LogicSig EVM signature validation', () => {
 
     test('approves when using pre-computed signature', async () => {
       const { algorand } = localnet
-      const sdk = new LiquidEvmSdk({ algorand })
+      const sdk = new AlgoXEvmSdk({ algorand })
       const addr = await sdk.getAddress({ evmAddress: CORRECT_ETH_ACCOUNT })
 
       await algorand.account.ensureFundedFromEnvironment(addr, (1).algos())
@@ -107,7 +107,7 @@ describe('LogicSig EVM signature validation', () => {
       const [gtxn] = algosdk.assignGroupID([txn])
 
       // Pre-compute the signature
-      const payload = LiquidEvmSdk.getSignPayload([gtxn])
+      const payload = AlgoXEvmSdk.getSignPayload([gtxn])
       const signature = await signMessage(buildTypedData(payload))
 
       // Sign using pre-computed signature
@@ -122,7 +122,7 @@ describe('LogicSig EVM signature validation', () => {
 
     test('rejects when templated EVM account does not match signer', async () => {
       const { algorand } = localnet
-      const sdk = new LiquidEvmSdk({ algorand })
+      const sdk = new AlgoXEvmSdk({ algorand })
       const addr = await sdk.getAddress({ evmAddress: WRONG_ETH_ACCOUNT })
 
       await algorand.account.ensureFundedFromEnvironment(addr, (1).algos())
@@ -148,7 +148,7 @@ describe('LogicSig EVM signature validation', () => {
   describe('grouped transactions (Group ID)', () => {
     test('approves when signature matches the templated EVM account', async () => {
       const { algorand, testAccount } = localnet.context
-      const sdk = new LiquidEvmSdk({ algorand })
+      const sdk = new AlgoXEvmSdk({ algorand })
       const { addr, signer } = await sdk.getSigner({ evmAddress: CORRECT_ETH_ACCOUNT, signMessage })
 
       await algorand.account.ensureFundedFromEnvironment(addr, (1).algos())
@@ -173,7 +173,7 @@ describe('LogicSig EVM signature validation', () => {
 
     test('rejects when templated EVM account does not match signer', async () => {
       const { algorand, testAccount } = localnet.context
-      const sdk = new LiquidEvmSdk({ algorand })
+      const sdk = new AlgoXEvmSdk({ algorand })
       const { addr, signer } = await sdk.getSigner({ evmAddress: WRONG_ETH_ACCOUNT, signMessage })
 
       await algorand.account.ensureFundedFromEnvironment(addr, (1).algos())
@@ -202,7 +202,7 @@ describe('LogicSig EVM signature validation', () => {
   describe('invalid signature components', () => {
     test('rejects when R is invalid (zero)', async () => {
       const { algorand } = localnet
-      const sdk = new LiquidEvmSdk({ algorand })
+      const sdk = new AlgoXEvmSdk({ algorand })
       const addr = await sdk.getAddress({ evmAddress: CORRECT_ETH_ACCOUNT })
 
       await algorand.account.ensureFundedFromEnvironment(addr, (1).algos())
@@ -216,7 +216,7 @@ describe('LogicSig EVM signature validation', () => {
       const [gtxn] = algosdk.assignGroupID([txn])
 
       // Get a valid signature
-      const payload = LiquidEvmSdk.getSignPayload([gtxn])
+      const payload = AlgoXEvmSdk.getSignPayload([gtxn])
       const validSig = await signMessage(buildTypedData(payload))
 
       // Parse signature
@@ -245,7 +245,7 @@ describe('LogicSig EVM signature validation', () => {
 
     test('rejects when R is invalid (exceeds curve order)', async () => {
       const { algorand } = localnet
-      const sdk = new LiquidEvmSdk({ algorand })
+      const sdk = new AlgoXEvmSdk({ algorand })
       const addr = await sdk.getAddress({ evmAddress: CORRECT_ETH_ACCOUNT })
 
       await algorand.account.ensureFundedFromEnvironment(addr, (1).algos())
@@ -259,7 +259,7 @@ describe('LogicSig EVM signature validation', () => {
       const [gtxn] = algosdk.assignGroupID([txn])
 
       // Get a valid signature
-      const payload = LiquidEvmSdk.getSignPayload([gtxn])
+      const payload = AlgoXEvmSdk.getSignPayload([gtxn])
       const validSig = await signMessage(buildTypedData(payload))
 
       // Parse signature
@@ -288,7 +288,7 @@ describe('LogicSig EVM signature validation', () => {
 
     test('rejects when S is invalid (zero)', async () => {
       const { algorand } = localnet
-      const sdk = new LiquidEvmSdk({ algorand })
+      const sdk = new AlgoXEvmSdk({ algorand })
       const addr = await sdk.getAddress({ evmAddress: CORRECT_ETH_ACCOUNT })
 
       await algorand.account.ensureFundedFromEnvironment(addr, (1).algos())
@@ -302,7 +302,7 @@ describe('LogicSig EVM signature validation', () => {
       const [gtxn] = algosdk.assignGroupID([txn])
 
       // Get a valid signature
-      const payload = LiquidEvmSdk.getSignPayload([gtxn])
+      const payload = AlgoXEvmSdk.getSignPayload([gtxn])
       const validSig = await signMessage(buildTypedData(payload))
 
       // Parse signature
@@ -331,7 +331,7 @@ describe('LogicSig EVM signature validation', () => {
 
     test('rejects when S is invalid (exceeds curve order)', async () => {
       const { algorand } = localnet
-      const sdk = new LiquidEvmSdk({ algorand })
+      const sdk = new AlgoXEvmSdk({ algorand })
       const addr = await sdk.getAddress({ evmAddress: CORRECT_ETH_ACCOUNT })
 
       await algorand.account.ensureFundedFromEnvironment(addr, (1).algos())
@@ -345,7 +345,7 @@ describe('LogicSig EVM signature validation', () => {
       const [gtxn] = algosdk.assignGroupID([txn])
 
       // Get a valid signature
-      const payload = LiquidEvmSdk.getSignPayload([gtxn])
+      const payload = AlgoXEvmSdk.getSignPayload([gtxn])
       const validSig = await signMessage(buildTypedData(payload))
 
       // Parse signature
@@ -374,7 +374,7 @@ describe('LogicSig EVM signature validation', () => {
 
     test('rejects when V is invalid (not 27 or 28)', async () => {
       const { algorand } = localnet
-      const sdk = new LiquidEvmSdk({ algorand })
+      const sdk = new AlgoXEvmSdk({ algorand })
       const addr = await sdk.getAddress({ evmAddress: CORRECT_ETH_ACCOUNT })
 
       await algorand.account.ensureFundedFromEnvironment(addr, (1).algos())
@@ -388,7 +388,7 @@ describe('LogicSig EVM signature validation', () => {
       const [gtxn] = algosdk.assignGroupID([txn])
 
       // Get a valid signature
-      const payload = LiquidEvmSdk.getSignPayload([gtxn])
+      const payload = AlgoXEvmSdk.getSignPayload([gtxn])
       const validSig = await signMessage(buildTypedData(payload))
 
       // Parse signature
@@ -415,7 +415,7 @@ describe('LogicSig EVM signature validation', () => {
 
     test('rejects when V is flipped (wrong recovery ID)', async () => {
       const { algorand } = localnet
-      const sdk = new LiquidEvmSdk({ algorand })
+      const sdk = new AlgoXEvmSdk({ algorand })
       const addr = await sdk.getAddress({ evmAddress: CORRECT_ETH_ACCOUNT })
 
       await algorand.account.ensureFundedFromEnvironment(addr, (1).algos())
@@ -429,7 +429,7 @@ describe('LogicSig EVM signature validation', () => {
       const [gtxn] = algosdk.assignGroupID([txn])
 
       // Get a valid signature
-      const payload = LiquidEvmSdk.getSignPayload([gtxn])
+      const payload = AlgoXEvmSdk.getSignPayload([gtxn])
       const validSig = await signMessage(buildTypedData(payload))
 
       // Parse signature
@@ -457,7 +457,7 @@ describe('LogicSig EVM signature validation', () => {
 
     test('rejects when signature is completely random', async () => {
       const { algorand } = localnet
-      const sdk = new LiquidEvmSdk({ algorand })
+      const sdk = new AlgoXEvmSdk({ algorand })
       const addr = await sdk.getAddress({ evmAddress: CORRECT_ETH_ACCOUNT })
 
       await algorand.account.ensureFundedFromEnvironment(addr, (1).algos())
@@ -492,7 +492,7 @@ describe('LogicSig EVM signature validation', () => {
 
     test('rejects when signature length is incorrect (truncated)', async () => {
       const { algorand } = localnet
-      const sdk = new LiquidEvmSdk({ algorand })
+      const sdk = new AlgoXEvmSdk({ algorand })
       const addr = await sdk.getAddress({ evmAddress: CORRECT_ETH_ACCOUNT })
 
       await algorand.account.ensureFundedFromEnvironment(addr, (1).algos())
@@ -506,7 +506,7 @@ describe('LogicSig EVM signature validation', () => {
       const [gtxn] = algosdk.assignGroupID([txn])
 
       // Get a valid signature
-      const payload = LiquidEvmSdk.getSignPayload([gtxn])
+      const payload = AlgoXEvmSdk.getSignPayload([gtxn])
       const validSig = await signMessage(buildTypedData(payload))
 
       // Truncate signature (remove last 4 hex chars = 2 bytes)
@@ -527,7 +527,7 @@ describe('LogicSig EVM signature validation', () => {
   describe('lower-S signature normalization', () => {
     test('normalizes upper-S signature to lower-S', async () => {
       const { algorand } = localnet
-      const sdk = new LiquidEvmSdk({ algorand })
+      const sdk = new AlgoXEvmSdk({ algorand })
       const addr = await sdk.getAddress({ evmAddress: CORRECT_ETH_ACCOUNT })
 
       await algorand.account.ensureFundedFromEnvironment(addr, (1).algos())
@@ -541,7 +541,7 @@ describe('LogicSig EVM signature validation', () => {
       const [gtxn] = algosdk.assignGroupID([txn])
 
       // Get a normal signature
-      const payload = LiquidEvmSdk.getSignPayload([gtxn])
+      const payload = AlgoXEvmSdk.getSignPayload([gtxn])
       const normalSig = await signMessage(buildTypedData(payload))
 
       // Parse and extract s value

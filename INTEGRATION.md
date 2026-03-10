@@ -1,6 +1,6 @@
 # Early Adopter Integration Guide
 
-In case you want to experiment with liquid-evm-accounts in your frontend:
+In case you want to experiment with Algo x EVM accounts in your frontend:
 
 > [!IMPORTANT]
 > **DO NOT PERFORM PUBLIC BETA TESTING YET**
@@ -22,7 +22,7 @@ Use npm aliases to install the experimental `@d13co` builds under the `@txnlab` 
 pnpm add @txnlab/use-wallet@npm:@d13co/use-wallet@latest \
          @txnlab/use-wallet-react@npm:@d13co/use-wallet-react@latest \
          @txnlab/use-wallet-ui-react@npm:@d13co/use-wallet-ui-react@latest \
-         liquid-accounts-evm@latest @d13co/algo-x-evm-ui@latest \
+         algo-x-evm-sdk@latest @d13co/algo-x-evm-ui@latest \
          @rainbow-me/rainbowkit wagmi@2 @wagmi/core@2 viem @tanstack/react-query
 ```
 
@@ -31,7 +31,7 @@ pnpm add @txnlab/use-wallet@npm:@d13co/use-wallet@latest \
 npm install @txnlab/use-wallet@npm:@d13co/use-wallet@latest \
             @txnlab/use-wallet-react@npm:@d13co/use-wallet-react@latest \
             @txnlab/use-wallet-ui-react@npm:@d13co/use-wallet-ui-react@latest \
-            liquid-accounts-evm@latest @d13co/algo-x-evm-ui@latest \
+            algo-x-evm-sdk@latest @d13co/algo-x-evm-ui@latest \
             @rainbow-me/rainbowkit wagmi@2 @wagmi/core@2 viem @tanstack/react-query
 ```
 
@@ -40,7 +40,7 @@ npm install @txnlab/use-wallet@npm:@d13co/use-wallet@latest \
 yarn add @txnlab/use-wallet@npm:@d13co/use-wallet@latest \
          @txnlab/use-wallet-react@npm:@d13co/use-wallet-react@latest \
          @txnlab/use-wallet-ui-react@npm:@d13co/use-wallet-ui-react@latest \
-         liquid-accounts-evm@latest @d13co/algo-x-evm-ui@latest \
+         algo-x-evm-sdk@latest @d13co/algo-x-evm-ui@latest \
          @rainbow-me/rainbowkit wagmi@2 @wagmi/core@2 viem @tanstack/react-query
 ```
 
@@ -91,7 +91,7 @@ export default defineConfig({
 ## 3. Usage
 
 1. Add global polyfills for the bridge SDK (at the top of your entry file)
-2. Create a wagmi config with `algorandChain` from `liquid-accounts-evm`
+2. Create a wagmi config with `algorandChain` from `algo-x-evm-sdk`
 3. Add `WalletId.RAINBOWKIT` to your `WalletManager`, passing `wagmiConfig`
 4. Pass `wagmiConfig` to `WalletUIProvider` — it auto-wires `WagmiProvider`, `RainbowKitProvider`, and the bridge component internally
 5. Place `<WalletButton />` as your connect/account button
@@ -108,7 +108,7 @@ if (!(globalThis as any).TronWebProto) {
 // ...other imports...
 import { WalletProvider, WalletManager, WalletId, NetworkId } from '@txnlab/use-wallet-react'
 import { WalletUIProvider, WalletButton } from '@txnlab/use-wallet-ui-react'
-import { algorandChain } from 'liquid-accounts-evm'
+import { algorandChain } from 'algo-x-evm-sdk'
 // Custom getDefaultConfig from use-wallet-ui-react instead of rainbowkit
 // removes the Base Account web wallet from the default list (not supported)
 import { getDefaultConfig } from '@txnlab/use-wallet-ui-react/rainbowkit'
@@ -120,7 +120,7 @@ import '@rainbow-me/rainbowkit/styles.css'
 // Create wagmi config with the Algorand EVM chain
 // replace values with your project name and WC ID
 const wagmiConfig = getDefaultConfig({
-  appName: 'My Liquid EVM Accounts App',
+  appName: 'My Algo x EVM App',
   projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // from cloud.walletconnect.com
   chains: [algorandChain],
 })
@@ -173,7 +173,7 @@ function setNetwork(network: 'localnet' | 'testnet' | 'mainnet') {
 }
 ```
 
-## 4. Manage Liquid EVM Account
+## 4. Manage Algo x EVM Account
 
 After connecting your EVM account, you can manage it via:
 

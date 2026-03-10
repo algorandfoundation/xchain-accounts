@@ -1,6 +1,6 @@
 import type { AlgorandClient } from "@algorandfoundation/algokit-utils"
 import algosdk from "algosdk"
-import { LIQUID_EVM_LSIG_TEAL } from "./teal"
+import { ALGO_X_EVM_LSIG_TEAL } from "./teal"
 import {
   SignTypedDataParams,
   buildTypedData,
@@ -22,7 +22,7 @@ export {
 } from "./utils"
 export type { SignTypedDataParams } from "./utils"
 
-export class LiquidEvmSdk {
+export class AlgoXEvmSdk {
   private algorand: AlgorandClient
   private compiledCache = new Map<string, Uint8Array>()
 
@@ -35,9 +35,9 @@ export class LiquidEvmSdk {
   }
 
   private async getCompiled(evmAddress: string): Promise<Uint8Array> {
-    const normalized = LiquidEvmSdk.normalizeAddress(evmAddress)
+    const normalized = AlgoXEvmSdk.normalizeAddress(evmAddress)
     if (!this.compiledCache.has(normalized)) {
-      const result = await this.algorand.app.compileTealTemplate(LIQUID_EVM_LSIG_TEAL, {
+      const result = await this.algorand.app.compileTealTemplate(ALGO_X_EVM_LSIG_TEAL, {
         TMPL_OWNER: hexToBytes(normalized),
       })
       this.compiledCache.set(normalized, result.compiledBase64ToBytes)
@@ -77,7 +77,7 @@ export class LiquidEvmSdk {
    *
    * @example
    * ```typescript
-   * import type { SignTypedDataParams } from "liquid-accounts-evm"
+   * import type { SignTypedDataParams } from "algo-x-evm-sdk"
    *
    * // With ethers.js
    * const signMessage = async ({ domain, types, message }: SignTypedDataParams) => {
@@ -105,7 +105,7 @@ export class LiquidEvmSdk {
    *
    * @example
    * ```typescript
-   * const payload = LiquidEvmSdk.getSignPayload(txns)
+   * const payload = AlgoXEvmSdk.getSignPayload(txns)
    * const typedData = buildTypedData(payload)
    * const signature = await wallet.signTypedData(typedData.domain, typedData.types, typedData.message)
    *
@@ -135,7 +135,7 @@ export class LiquidEvmSdk {
     if (signature) {
       evmSig = signature
     } else if (signMessage) {
-      const payload = LiquidEvmSdk.getSignPayload(txns)
+      const payload = AlgoXEvmSdk.getSignPayload(txns)
       evmSig = await signMessage(buildTypedData(payload))
     } else {
       throw new Error("Either signMessage or signature must be provided")
@@ -158,7 +158,7 @@ export class LiquidEvmSdk {
    *
    * @example
    * ```typescript
-   * import type { SignTypedDataParams } from "liquid-accounts-evm"
+   * import type { SignTypedDataParams } from "algo-x-evm-sdk"
    *
    * const signMessage = async ({ domain, types, message }: SignTypedDataParams) => {
    *   return wallet.signTypedData(domain, types, message)
@@ -180,7 +180,7 @@ export class LiquidEvmSdk {
 
     const signer: algosdk.TransactionSigner = async (txnGroup, indexesToSign) => {
       // Get the payload (group ID for grouped txns, txn ID for standalone)
-      const payload = LiquidEvmSdk.getSignPayload(txnGroup)
+      const payload = AlgoXEvmSdk.getSignPayload(txnGroup)
 
       const evmSig = await signMessage(buildTypedData(payload))
       const sigBytes = parseEvmSignature(evmSig)

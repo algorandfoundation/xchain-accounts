@@ -1,5 +1,5 @@
 /**
- * Liquid EVM LogicSig
+ * Algo x EVM LogicSig
  *
  * A LogicSig that allows Ethereum wallet addresses to control Algorand accounts.
  * The contract verifies ECDSA (secp256k1) signatures from an Ethereum address,
@@ -25,7 +25,7 @@ import { StaticBytes } from '@algorandfoundation/algorand-typescript/arc4'
 // Template variable: the 20-byte Ethereum address that controls this LogicSig
 const owner = TemplateVar<StaticBytes<20>>('OWNER')
 
-export class LiquidEvmLsig extends LogicSig {
+export class AlgoXEvmLsig extends LogicSig {
   public program() {
     // Payload to sign is the 32-byte transaction group ID (if group size > 1)
     // otherwise the transaction ID of the current transaction

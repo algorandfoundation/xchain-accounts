@@ -27,7 +27,7 @@ A LogicSig is a stateless smart contract on Algorand that can authorize transact
 ```
 evm-logicsig/
 ├── smart_contracts/
-│   ├── liquidevm/
+│   ├── algo-x-evm/
 │   │   ├── logicsig.algo.ts        # Main LogicSig contract
 │   │   └── logicsig.e2e.spec.ts    # E2E tests
 │   ├── artifacts/                   # Compiled TEAL output
@@ -106,7 +106,7 @@ algokit project run build
 npm run build
 ```
 
-This generates TEAL bytecode in `smart_contracts/artifacts/liquidevm/`.
+This generates TEAL bytecode in `smart_contracts/artifacts/algo-x-evm/`.
 
 ### Testing
 
@@ -117,7 +117,7 @@ The project includes comprehensive E2E tests that verify:
 - Atomic group transaction signing
 - Template variable substitution
 
-> **Important**: The tests use the [liquid-accounts-evm SDK](../evm-sdk/), which must be built before running tests. If you modify the LogicSig contract, rebuild both the contract and the SDK for changes to be reflected in tests:
+> **Important**: The tests use the [algo-x-evm-sdk SDK](../evm-sdk/), which must be built before running tests. If you modify the LogicSig contract, rebuild both the contract and the SDK for changes to be reflected in tests:
 >
 > ```bash
 > # From repository root
@@ -138,7 +138,7 @@ The test suite uses:
 - **vitest** for test execution
 - **@noble/secp256k1** for generating test EVM signatures
 - **AlgoKit Utils** for interacting with LocalNet
-- **liquid-accounts-evm** for LogicSig compilation and signing
+- **algo-x-evm-sdk** for LogicSig compilation and signing
 
 ### Deploying
 
@@ -146,7 +146,7 @@ This is a LogicSig, not an application contract. It doesn't need deployment in t
 
 ## Contract Details
 
-### File: `smart_contracts/liquidevm/logicsig.algo.ts`
+### File: `smart_contracts/algo-x-evm/logicsig.algo.ts`
 
 The LogicSig is written in [Algorand TypeScript](https://github.com/algorandfoundation/puya-ts), which compiles to TEAL bytecode.
 
@@ -194,16 +194,16 @@ The type byte enables future composition of multiple authentication methods with
 
 ## Usage with SDK
 
-See the [liquid-accounts-evm SDK](../evm-sdk/README.md) for integration examples.
+See the [algo-x-evm-sdk SDK](../evm-sdk/README.md) for integration examples.
 
 Quick example:
 
 ```typescript
-import { LiquidEvmSdk } from 'liquid-accounts-evm'
+import { AlgoXEvmSdk } from 'algo-x-evm-sdk'
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
 
 const algorand = AlgorandClient.fromEnvironment()
-const sdk = new LiquidEvmSdk({ algorand })
+const sdk = new AlgoXEvmSdk({ algorand })
 
 // Get the Algorand address
 const addr = await sdk.getAddress({ 

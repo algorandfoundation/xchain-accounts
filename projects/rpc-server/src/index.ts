@@ -1,8 +1,8 @@
 import { AlgorandClient } from "@algorandfoundation/algokit-utils";
-import { LiquidEvmSdk } from "liquid-accounts-evm";
+import { AlgoXEvmSdk } from "algo-x-evm-sdk";
 
 const algorand = AlgorandClient.mainNet();
-const sdk = new LiquidEvmSdk({ algorand });
+const sdk = new AlgoXEvmSdk({ algorand });
 
 interface RpcRequest {
   id?: unknown;
