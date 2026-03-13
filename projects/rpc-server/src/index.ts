@@ -21,6 +21,12 @@ const SEL_NAME = "06fdde03";
 const SEL_SYMBOL = "95d89b41";
 const SEL_DECIMALS = "313ce567";
 const SEL_BALANCE_OF = "70a08231";
+const SEL_TRANSFER = "a9059cbb";
+const SEL_APPROVE = "095ea7b3";
+const SEL_TRANSFER_FROM = "23b872dd";
+
+const TRANSACTION_SITE_URL = "https://x.algorand.co";
+const DIRECT_TX_ERROR = `Direct transactions are not supported on this network. Please use ${TRANSACTION_SITE_URL} to send tokens.`;
 
 /**
  * Extract ASA ID from an EVM "contract" address.
@@ -29,6 +35,11 @@ const SEL_BALANCE_OF = "70a08231";
  */
 function addressToAsaId(address: string): bigint {
   const digits = address.replace(/^0x/i, "").replace(/^0+/, "") || "0";
+  if (!/^\d+$/.test(digits)) {
+    throw new Error(
+      `Address ${address} is not a valid ASA token address. ${DIRECT_TX_ERROR}`
+    );
+  }
   return BigInt(digits); // decimal interpretation of the digit string
 }
 
@@ -156,6 +167,18 @@ export default {
       return json({ jsonrpc: "2.0", id: body.id ?? null, result: "4160" });
     }
 
+    if (body.method === "eth_sendRawTransaction" || body.method === "eth_sendTransaction") {
+      return json({ jsonrpc: "2.0", id: body.id ?? null, error: { code: -32000, message: DIRECT_TX_ERROR } });
+    }
+
+    if (body.method === "eth_estimateGas") {
+      return json({ jsonrpc: "2.0", id: body.id ?? null, error: { code: -32000, message: DIRECT_TX_ERROR } });
+    }
+
+    if (body.method === "eth_getTransactionCount") {
+      return json({ jsonrpc: "2.0", id: body.id ?? null, result: "0x0" });
+    }
+
     return json({
       jsonrpc: "2.0",
       id: body.id ?? null,
@@ -207,6 +230,10 @@ async function handleEthCall(id: unknown, params: EthCallParams): Promise<Respon
       console.log(`  balanceOf(${holderEvmAddress}) -> 0 (not opted in, algo addr: ${algoAddress})`);
       return json({ jsonrpc: "2.0", id, result: abiEncodeUint256(0n) });
     }
+  }
+
+  if (selector === SEL_TRANSFER || selector === SEL_APPROVE || selector === SEL_TRANSFER_FROM) {
+    return json({ jsonrpc: "2.0", id, error: { code: -32000, message: DIRECT_TX_ERROR } });
   }
 
   return json({ jsonrpc: "2.0", id, error: { code: -32000, message: `Unsupported ERC-20 selector: 0x${selector}` } });
