@@ -5,6 +5,7 @@
   "scripts": {
     "build": "tsc --noEmit",
     "dev": "wrangler dev",
+    "logs": "wrangler tail",
     "deploy": "wrangler deploy",
     "test": "vitest run"
   },
