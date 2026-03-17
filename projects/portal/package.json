@@ -1,0 +1,40 @@
+{
+  "name": "algo-x-evm-portal",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "vite build && wrangler pages deploy .output/public"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.1.0",
+    "@tanstack/react-query": "^5",
+    "@tanstack/react-router": "^1",
+    "@tanstack/react-start": "^1",
+    "class-variance-authority": "^0.7",
+    "clsx": "^2",
+    "gsap": "^3.14.2",
+    "lucide-react": "^0.460",
+    "react": "^19",
+    "react-dom": "^19",
+    "react-markdown": "^9",
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4",
+    "tailwind-merge": "^2",
+    "vite": ">=7"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "autoprefixer": "^10",
+    "postcss": "^8",
+    "tailwindcss": "^3.4",
+    "tailwindcss-animate": "^1",
+    "typescript": "^5",
+    "wrangler": "^4"
+  }
+}

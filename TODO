@@ -27,3 +27,5 @@
 - [ ] network switching not updating account balances
 
 - [x] Stale connections: "No EVM wallet connector available" (rabby extension, coming back the next day)
+
+- [ ] Manage / Receive: QR code?
