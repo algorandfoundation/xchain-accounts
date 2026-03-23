@@ -10,6 +10,7 @@
     "deploy": "pnpm run build && wrangler deploy"
   },
   "dependencies": {
+    "abel-ghost-sdk": "^0.0.5",
     "@algorandfoundation/algokit-utils": "^9.2.0",
     "@d13co/algo-x-evm-ui": "workspace:*",
     "@d13co/open-in": "^0.1.0",

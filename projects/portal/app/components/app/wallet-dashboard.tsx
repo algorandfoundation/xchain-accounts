@@ -12,6 +12,8 @@ import {
   type WalletAdapter,
   type AssetHoldingDisplay,
 } from '@d13co/algo-x-evm-ui'
+import { SwapPanel } from './swap-panel'
+import { useSwapPanel } from './use-swap-panel'
 
 export function WalletDashboard() {
   const { activeAddress, activeWallet, algodClient, signTransactions } = useWallet()
@@ -19,6 +21,8 @@ export function WalletDashboard() {
   const queryClient = useQueryClient()
   const isFetching = useIsFetching()
   const { bridge, openBridge } = useBridgeDialog()
+
+  const [viewMode, setViewMode] = useState<'manage' | 'swap'>('manage')
 
   const [showAvailable, setShowAvailable] = useState(() => {
     try {
@@ -103,6 +107,9 @@ export function WalletDashboard() {
     [activeWallet],
   )
 
+  // Swap panel hook
+  const swap = useSwapPanel(wallet, assetHoldings.length > 0 ? assetHoldings : undefined, availableBalance, activeNetwork)
+
   // Transaction explorer URL helper
   const getTxExplorerUrl = useCallback(
     (txId: string | null) => {
@@ -138,21 +145,59 @@ export function WalletDashboard() {
 
   return (
     <div data-wallet-theme className="max-w-md mx-auto">
-      <ManagePanel
-        displayBalance={displayBalance}
-        showAvailableBalance={showAvailable}
-        onToggleBalance={toggleBalance}
-        onBack={() => {}}
-        send={{ ...send, explorerUrl: getTxExplorerUrl(send.txId) }}
-        optIn={{ ...optIn, evmAddress, explorerUrl: getTxExplorerUrl(optIn.txId) }}
-        onBridgeClick={bridge.isAvailable ? openBridge : undefined}
-        assets={assetHoldings.length > 0 ? assetHoldings : undefined}
-        totalBalance={totalBalance}
-        availableBalance={availableBalance}
-        onRefresh={() => queryClient.invalidateQueries()}
-        isRefreshing={isFetching > 0}
-        onExplore={handleExplore}
-      />
+      {viewMode === 'swap' ? (
+        <SwapPanel
+          {...swap}
+          accountAssets={assetHoldings.length > 0 ? assetHoldings : undefined}
+          availableBalance={availableBalance}
+          onBack={() => {
+            swap.reset()
+            setViewMode('manage')
+          }}
+        />
+      ) : (
+        <>
+          <ManagePanel
+            displayBalance={displayBalance}
+            showAvailableBalance={showAvailable}
+            onToggleBalance={toggleBalance}
+            onBack={() => {}}
+            send={{ ...send, explorerUrl: getTxExplorerUrl(send.txId) }}
+            optIn={{ ...optIn, evmAddress, explorerUrl: getTxExplorerUrl(optIn.txId) }}
+            onBridgeClick={bridge.isAvailable ? openBridge : undefined}
+            assets={assetHoldings.length > 0 ? assetHoldings : undefined}
+            totalBalance={totalBalance}
+            availableBalance={availableBalance}
+            onRefresh={() => queryClient.invalidateQueries()}
+            isRefreshing={isFetching > 0}
+            onExplore={handleExplore}
+          />
+          {/* Swap action button below ManagePanel */}
+          <div className="mt-2">
+            <button
+              onClick={() => setViewMode('swap')}
+              className="w-full py-2.5 px-4 bg-[var(--wui-color-bg-tertiary)] text-[var(--wui-color-text)] font-medium rounded-xl hover:brightness-90 transition-all text-sm flex items-center justify-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 mr-1.5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="m16 3 4 4-4 4" />
+                <path d="M20 7H4" />
+                <path d="m8 21-4-4 4-4" />
+                <path d="M4 17h16" />
+              </svg>
+              Swap
+            </button>
+          </div>
+        </>
+      )}
     </div>
   )
 }
