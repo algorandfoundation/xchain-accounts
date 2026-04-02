@@ -4,6 +4,7 @@ import {
   Scripts,
   createRootRoute,
 } from '@tanstack/react-router'
+import { ThemeProvider } from '~/components/theme-provider'
 import appCss from '~/styles/globals.css?url'
 
 export const Route = createRootRoute({
@@ -24,14 +25,19 @@ export const Route = createRootRoute({
   notFoundComponent: NotFound,
 })
 
+const themeScript = `(function(){try{var d=document.documentElement;var t=localStorage.getItem('theme')||'system';var dark=t==='dark'||(t==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches);d.classList.toggle('dark',dark)}catch(e){}})();`
+
 function RootComponent() {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body>
-        <Outlet />
+        <ThemeProvider>
+          <Outlet />
+        </ThemeProvider>
         <Scripts />
       </body>
     </html>

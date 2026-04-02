@@ -1,7 +1,7 @@
 import { useMemo, useState, useCallback } from 'react'
 import { useWallet, useNetwork } from '@txnlab/use-wallet-react'
 import { useQueryClient, useIsFetching } from '@tanstack/react-query'
-import { useAccountInfo, useBridgeDialog } from '@txnlab/use-wallet-ui-react'
+import { useAccountInfo, useBridgeDialog, mapBridgeToPanelProps } from '@txnlab/use-wallet-ui-react'
 import { getOpenInEntries } from '@d13co/open-in'
 import {
   ManagePanel,
@@ -9,6 +9,7 @@ import {
   useReceivePanel,
   useAssetRegistry,
   useAssets,
+  usePeraAssetData,
   type WalletAdapter,
   type AssetHoldingDisplay,
 } from '@d13co/algo-x-evm-ui'
@@ -67,36 +68,48 @@ export function WalletDashboard() {
 
   const { assets: assetInfoMap } = useAssets(assetIds, algodClient as any, activeNetwork)
 
-  const assetHoldings = useMemo((): AssetHoldingDisplay[] => {
-    return allHoldings
-      .map((holding) => {
-        const info = assetInfoMap[String(holding.assetId)]
-        if (!info) return null
-        const raw = BigInt(holding.amount)
-        let amount: string
-        if (info.decimals === 0) {
-          amount = raw.toString()
+  const heldAssetIds = useMemo(() => allHoldings.map((a) => Number(a.assetId)), [allHoldings])
+  const { peraData, fetchFor: fetchPeraFor } = usePeraAssetData(heldAssetIds, activeNetwork)
+
+  const assetHoldings = useMemo(() => {
+    const results: AssetHoldingDisplay[] = []
+    for (const holding of allHoldings) {
+      const info = assetInfoMap[String(holding.assetId)]
+      if (!info) continue
+      const raw = BigInt(holding.amount)
+      let amount: string
+      if (info.decimals === 0) {
+        amount = raw.toString()
+      } else {
+        const divisor = 10n ** BigInt(info.decimals)
+        const whole = raw / divisor
+        const remainder = raw % divisor
+        if (remainder === 0n) {
+          amount = whole.toString()
         } else {
-          const divisor = 10n ** BigInt(info.decimals)
-          const whole = raw / divisor
-          const remainder = raw % divisor
-          if (remainder === 0n) {
-            amount = whole.toString()
-          } else {
-            const frac = remainder.toString().padStart(info.decimals, '0').replace(/0+$/, '')
-            amount = `${whole}.${frac}`
-          }
+          const frac = remainder.toString().padStart(info.decimals, '0').replace(/0+$/, '')
+          amount = `${whole}.${frac}`
         }
-        return {
-          assetId: Number(holding.assetId),
-          name: info.name || `ASA#${holding.assetId}`,
-          unitName: info.unitName,
-          amount,
-          decimals: info.decimals,
-        }
+      }
+      const pera = peraData.get(Number(holding.assetId))
+      results.push({
+        assetId: Number(holding.assetId),
+        name: info.name || `ASA#${holding.assetId}`,
+        unitName: info.unitName,
+        amount,
+        decimals: info.decimals,
+        logo: pera?.logo,
+        verificationTier: pera?.verificationTier,
       })
-      .filter((a): a is AssetHoldingDisplay => a !== null)
-  }, [allHoldings, assetInfoMap])
+    }
+    return results
+  }, [allHoldings, assetInfoMap, peraData])
+
+  const bridgeProps = useMemo(() => {
+    if (!bridge.isAvailable) return undefined
+    const { onBack: _, ...rest } = mapBridgeToPanelProps(bridge)
+    return rest
+  }, [bridge])
 
   const evmAddress = useMemo(
     () => (activeWallet?.activeAccount?.metadata?.evmAddress as string) ?? null,
@@ -134,24 +147,48 @@ export function WalletDashboard() {
     })
   }, [])
 
+  const walletName = useMemo(
+    () => (activeWallet?.activeAccount?.metadata?.connectorName as string) || activeWallet?.metadata.name || null,
+    [activeWallet],
+  )
+
+  const walletIcon = useMemo(
+    () => (activeWallet?.activeAccount?.metadata?.connectorIcon as string) || activeWallet?.metadata.icon || null,
+    [activeWallet],
+  )
+
+  const handleDisconnect = useCallback(async () => {
+    if (activeWallet) {
+      try {
+        await activeWallet.disconnect()
+      } catch (error) {
+        console.error('Error disconnecting wallet:', error)
+      }
+    }
+  }, [activeWallet])
+
   if (!activeAddress) return null
 
   return (
-    <div data-wallet-theme className="max-w-md mx-auto">
+    <div>
       <ManagePanel
+        wideBreakpoint={800}
         displayBalance={displayBalance}
         showAvailableBalance={showAvailable}
         onToggleBalance={toggleBalance}
-        onBack={() => {}}
         send={{ ...send, explorerUrl: getTxExplorerUrl(send.txId) }}
-        optIn={{ ...optIn, evmAddress, explorerUrl: getTxExplorerUrl(optIn.txId) }}
-        onBridgeClick={bridge.isAvailable ? openBridge : undefined}
+        optIn={{ ...optIn, evmAddress, explorerUrl: getTxExplorerUrl(optIn.txId), peraData, fetchPeraData: fetchPeraFor }}
+        bridge={bridgeProps}
         assets={assetHoldings.length > 0 ? assetHoldings : undefined}
         totalBalance={totalBalance}
         availableBalance={availableBalance}
         onRefresh={() => queryClient.invalidateQueries()}
         isRefreshing={isFetching > 0}
         onExplore={handleExplore}
+        activeAddress={activeAddress}
+        walletName={walletName}
+        walletIcon={walletIcon}
+        onDisconnect={handleDisconnect}
       />
     </div>
   )

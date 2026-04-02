@@ -1,5 +1,6 @@
 import { Buffer } from 'buffer'
 import { type ReactNode, useMemo } from 'react'
+import { useResolvedTheme } from '~/components/theme-provider'
 
 // Polyfills for wallet/bridge SDK dependencies (client-only via lazy load)
 if (typeof window !== 'undefined') {
@@ -42,10 +43,11 @@ function makeWalletManager() {
 
 export function WalletProviders({ children }: { children: ReactNode }) {
   const walletManager = useMemo(() => makeWalletManager(), [])
+  const resolvedTheme = useResolvedTheme()
 
   return (
     <WalletProvider manager={walletManager}>
-      <WalletUIProvider theme="system" wagmiConfig={wagmiConfig}>
+      <WalletUIProvider theme={resolvedTheme} wagmiConfig={wagmiConfig}>
         {children}
       </WalletUIProvider>
     </WalletProvider>

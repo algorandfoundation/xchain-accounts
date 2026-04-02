@@ -2,6 +2,7 @@ import { Link, useRouterState } from '@tanstack/react-router'
 import { useState } from 'react'
 import { ArrowUpRight, Menu, X } from 'lucide-react'
 import { cn } from '~/lib/utils'
+import { ThemeToggle } from '~/components/theme-toggle'
 
 const navItems = [{ label: 'Docs', to: '/docs' as const }]
 
@@ -52,6 +53,7 @@ export function Header() {
               GitHub
             </a>
           </nav>
+          <ThemeToggle />
           {!isApp && (
             <Link
               to="/app"
@@ -105,6 +107,10 @@ export function Header() {
               <ArrowUpRight size={16} />
             </Link>
           )}
+          <div className="flex items-center gap-2 py-2">
+            <ThemeToggle />
+            <span className="text-sm text-muted-foreground">Toggle theme</span>
+          </div>
           {/* Status badge - mobile */}
           <div className="mt-4 flex justify-center border-t pt-4">
             <div className="inline-flex items-center gap-2 rounded-full border bg-background px-3 py-1 text-xs text-muted-foreground">

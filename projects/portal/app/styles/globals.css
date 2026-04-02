@@ -58,8 +58,9 @@
   }
 }
 
-/* Wallet UI component theme — maps portal colors to algo-x-evm-ui CSS vars */
-[data-wallet-theme] {
+/* Wallet UI component theme — maps portal colors to algo-x-evm-ui CSS vars.
+   Double selector bumps specificity above the injected wallet-ui defaults. */
+[data-wallet-theme][data-wallet-theme] {
   --wui-color-primary: hsl(var(--primary));
   --wui-color-primary-hover: hsl(var(--primary));
   --wui-color-primary-text: hsl(var(--primary-foreground));
