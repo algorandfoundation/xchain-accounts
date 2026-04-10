@@ -86,10 +86,18 @@ export function WalletDashboard() {
   const swapOptions = useMemo(() => ({
     fetchQuote: (params: { fromASAID: number; toASAID: number; amount: bigint; address: string }) =>
       haystackRouter.newQuote(params),
-    executeSwap: async (params: { quote: any; address: string; slippage: number }) => {
+    executeSwap: async (params: { quote: any; address: string; slippage: number; onSigned?: () => void }) => {
+      const { onSigned, ...rest } = params
+      // Wrap the signer so the panel transitions from "signing" to "sending"
+      // the moment the wallet returns, before submission + confirmation.
+      const wrappedSigner = async (txnGroup: any[], indexesToSign: number[]) => {
+        const result = await swapSigner(txnGroup, indexesToSign)
+        onSigned?.()
+        return result
+      }
       const swap = await haystackRouter.newSwap({
-        ...params,
-        signer: swapSigner,
+        ...rest,
+        signer: wrappedSigner,
       })
       return swap.execute()
     },
@@ -134,7 +142,7 @@ export function WalletDashboard() {
     return results
   }, [allHoldings, assetInfoMap, peraData])
 
-  const swap = useSwapPanel(wallet, swapOptions, assetHoldings)
+  const swap = useSwapPanel(wallet, swapOptions, assetHoldings, registry)
 
   const bridgeProps = useMemo(() => {
     if (!bridge.isAvailable) return undefined
@@ -209,7 +217,7 @@ export function WalletDashboard() {
         onToggleBalance={toggleBalance}
         send={{ ...send, explorerUrl: getTxExplorerUrl(send.txId) }}
         optIn={{ ...optIn, evmAddress, explorerUrl: getTxExplorerUrl(optIn.txId), peraData, fetchPeraData: fetchPeraFor }}
-        swap={{ ...swap, accountAssets: assetHoldings.length > 0 ? assetHoldings : undefined, totalBalance, availableBalance, explorerUrl: getTxExplorerUrl(swap.txId) }}
+        swap={{ ...swap, accountAssets: assetHoldings.length > 0 ? assetHoldings : undefined, totalBalance, availableBalance, explorerUrl: getTxExplorerUrl(swap.txId), peraData, fetchPeraData: fetchPeraFor }}
         bridge={bridgeProps}
         assets={assetHoldings.length > 0 ? assetHoldings : undefined}
         totalBalance={totalBalance}
