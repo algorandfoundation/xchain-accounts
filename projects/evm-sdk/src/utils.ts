@@ -100,7 +100,7 @@ export const ALGORAND_EVM_CHAIN_CONFIG = {
     symbol: "ALGO",
     decimals: 18, // MetaMask requires 18 (even though ALGO is 6)
   },
-  rpcUrls: ["https://rpc-server.tasos-bitsios.workers.dev"],
+  rpcUrls: ["https://x-evm-rpc.algorand.tech"],
   blockExplorerUrls: ["https://allo.info", "https://explorer.perawallet.app/", "https://lora.algokit.io"],
 }
 
