@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { useWallet } from "@txnlab/use-wallet-react";
-import { WalletButton } from "@txnlab/use-wallet-ui-react";
+import { WalletButton, type UseSwapOptions } from "@txnlab/use-wallet-ui-react";
 import { AlgorandClient } from "@algorandfoundation/algokit-utils";
 import algosdk from "algosdk";
 import { RouterClient } from "@txnlab/haystack-router";
@@ -478,17 +478,10 @@ function AppContent({ theme, setTheme, network, setNetwork }: AppProps) {
     [signTransactions],
   );
 
-  const swapOptions = useMemo(
+  const swapOptions = useMemo<UseSwapOptions>(
     () => ({
-      fetchQuote: (params: { fromASAID: number; toASAID: number; amount: bigint; address: string }) =>
-        haystackRouter.newQuote(params),
-      executeSwap: async (params: {
-        quote: Parameters<typeof haystackRouter.newSwap>[0]["quote"];
-        address: string;
-        slippage: number;
-        onSigned?: () => void;
-      }) => {
-        const { onSigned, ...rest } = params;
+      fetchQuote: (params) => haystackRouter.newQuote(params),
+      executeSwap: async ({ onSigned, quote, address, slippage }) => {
         // Wrap the signer so we can fire `onSigned` the moment the wallet returns —
         // this transitions the UI from "awaiting signature" to "sending transaction"
         // before the SDK proceeds to submit + wait for confirmation.
@@ -497,7 +490,12 @@ function AppContent({ theme, setTheme, network, setNetwork }: AppProps) {
           onSigned?.();
           return result;
         };
-        const swap = await haystackRouter.newSwap({ ...rest, signer: wrappedSigner });
+        const swap = await haystackRouter.newSwap({
+          quote: quote as Parameters<typeof haystackRouter.newSwap>[0]["quote"],
+          address,
+          slippage,
+          signer: wrappedSigner,
+        });
         return swap.execute();
       },
     }),
