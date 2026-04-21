@@ -26,7 +26,6 @@ const wagmiConfig = getDefaultConfig({
   appName: "Algo x EVM Demo",
   projectId: "3404862cca4501e4d84be405269d955c",
   chains: [algorandChain],
-  debug: true,
 });
 
 function makeWalletManager(network: AlgorandNetwork) {
@@ -84,8 +83,8 @@ function Root() {
   useEffect(() => {
     localStorage.setItem("app-theme", theme);
     document.documentElement.style.colorScheme = theme;
-    document.documentElement.style.color = theme === "dark" ? "rgba(255, 255, 255, 0.87)" : "#213547";
-    document.documentElement.style.backgroundColor = theme === "dark" ? "#242424" : "#ffffff";
+    document.documentElement.style.color = theme === "dark" ? "#e9e9fd" : "#001324";
+    document.documentElement.style.backgroundColor = theme === "dark" ? "#001324" : "#ffffff";
   }, [theme]);
 
   return (

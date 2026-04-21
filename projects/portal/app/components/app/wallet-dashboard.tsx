@@ -227,12 +227,13 @@ export function WalletDashboard() {
         isRefreshing={isFetching > 0}
         onExplore={handleExplore}
         activeAddress={activeAddress}
+        evmAddress={evmAddress}
         walletName={walletName}
         walletIcon={walletIcon}
         onDisconnect={handleDisconnect}
         accounts={activeWalletAccounts?.map((a) => ({
           address: a.address,
-          displayName: a.name !== a.address ? a.name : null,
+          displayName: null,
           icon: null,
         }))}
         onAccountSwitch={activeWallet ? (addr: string) => activeWallet.setActiveAccount(addr) : undefined}
