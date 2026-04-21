@@ -9,16 +9,15 @@ export function ThemeToggle() {
 
   useEffect(() => setMounted(true), [])
 
-  function cycle() {
-    const next = theme === 'system' ? 'light' : theme === 'light' ? 'dark' : 'system'
-    setTheme(next)
-  }
-
   // Resolve what's actually shown
   const isDark =
     mounted &&
     (theme === 'dark' ||
       (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches))
+
+  function cycle() {
+    setTheme(isDark ? 'light' : 'dark')
+  }
 
   return (
     <Button variant="ghost" size="icon" onClick={cycle} aria-label="Toggle theme" className="h-9 w-9">
