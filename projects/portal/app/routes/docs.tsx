@@ -25,7 +25,7 @@ function DocsSidebar({ onNavigate }: { onNavigate?: () => void }) {
         return (
           <div key={doc.slug}>
             {showCategory && (
-              <p className="mb-1 mt-4 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground first:mt-0">
+              <p className={cn('mb-2 mt-4 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground', currentCategory !== docs[0].category && '!mt-6')}>
                 {doc.category}
               </p>
             )}
