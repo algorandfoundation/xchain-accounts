@@ -1,17 +1,11 @@
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useWallet } from "@txnlab/use-wallet-react";
-import { WalletButton, type UseSwapOptions } from "@txnlab/use-wallet-ui-react";
+import { WalletButton } from "@txnlab/use-wallet-ui-react";
 import { AlgorandClient } from "@algorandfoundation/algokit-utils";
 import algosdk from "algosdk";
-import { RouterClient } from "@txnlab/haystack-router";
 import "./App.css";
 import base32 from "hi-base32";
 import type { Theme } from "@txnlab/use-wallet-ui-react";
-
-const haystackRouter = new RouterClient({
-  apiKey: "bd650cf4-3d73-4e3f-ad37-1ada754bd659",
-  autoOptIn: true,
-});
 
 type AlgorandNetwork = "localnet" | "testnet" | "mainnet";
 
@@ -468,40 +462,6 @@ interface AppProps {
 }
 
 function AppContent({ theme, setTheme, network, setNetwork }: AppProps) {
-  const { signTransactions } = useWallet();
-
-  const swapSigner = useCallback(
-    async (txnGroup: algosdk.Transaction[], indexesToSign: number[]): Promise<Uint8Array[]> => {
-      const signed = await signTransactions(txnGroup, indexesToSign);
-      return signed.filter((s): s is Uint8Array => s != null);
-    },
-    [signTransactions],
-  );
-
-  const swapOptions = useMemo<UseSwapOptions>(
-    () => ({
-      fetchQuote: (params) => haystackRouter.newQuote(params),
-      executeSwap: async ({ onSigned, quote, address, slippage }) => {
-        // Wrap the signer so we can fire `onSigned` the moment the wallet returns —
-        // this transitions the UI from "awaiting signature" to "sending transaction"
-        // before the SDK proceeds to submit + wait for confirmation.
-        const wrappedSigner = async (txnGroup: algosdk.Transaction[], indexesToSign: number[]) => {
-          const result = await swapSigner(txnGroup, indexesToSign);
-          onSigned?.();
-          return result;
-        };
-        const swap = await haystackRouter.newSwap({
-          quote: quote as Parameters<typeof haystackRouter.newSwap>[0]["quote"],
-          address,
-          slippage,
-          signer: wrappedSigner,
-        });
-        return swap.execute();
-      },
-    }),
-    [swapSigner],
-  );
-
   return (
     <div className="container">
       <div
@@ -509,7 +469,7 @@ function AppContent({ theme, setTheme, network, setNetwork }: AppProps) {
       >
         <ThemeToggle theme={theme} setTheme={setTheme} style={{ justifySelf: "start" }} />
         <NetworkSelector network={network} setNetwork={setNetwork} />
-        <WalletButton swap={swapOptions} />
+        <WalletButton />
       </div>
       <h1>Liquid EVM Accounts</h1>
       <p style={{ opacity: 0.6, marginTop: -8 }}>
