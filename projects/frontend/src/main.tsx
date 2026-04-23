@@ -16,6 +16,7 @@ import { WalletManager, WalletId } from "@txnlab/use-wallet-react";
 import { getDefaultConfig } from "@txnlab/use-wallet-ui-react/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import { algorandChain } from "algo-x-evm-sdk";
+import { http } from "viem";
 import "./index.css";
 import App from "./App.tsx";
 import { ErrorBoundary } from "./ErrorBoundary.tsx";
@@ -26,6 +27,14 @@ const wagmiConfig = getDefaultConfig({
   appName: "Algo x EVM Demo",
   projectId: "3404862cca4501e4d84be405269d955c",
   chains: [algorandChain],
+  // use-wallet-ui's getDefaultConfig only wires transports for its built-in
+  // bridge chains, so any extra chain we pass in (here, algorandChain) must
+  // supply its own transport — otherwise wagmi's extractRpcUrls blows up
+  // inside the MetaMask connector's initProvider. http() with no args falls
+  // back to chain.rpcUrls.default.http[0].
+  transports: {
+    [algorandChain.id]: http(),
+  },
 });
 
 function makeWalletManager(network: AlgorandNetwork) {
