@@ -183,6 +183,109 @@ The `buffer` package and `TronWebProto` stub in your entry file are required by 
 
 Access it from `{WalletButton}` → ⚡ Manage → # Bridge
 
+## 5. Notices (disclaimers & info dialogs)
+
+`WalletUIProvider` accepts an optional `notices` prop that injects gating UI (or always-visible copy) in front of certain flows. There are three kinds of notices:
+
+- **`disclaimer`** — custom text + `I understand the risks and wish to proceed` checkbox + `Accept` button. Acceptance is required to proceed.
+- **`info`** — custom title/body + single `Continue` button. Acknowledged on click.
+- **`footer`** — passive text rendered inline at the bottom of a host panel. Not gated, no acknowledgement.
+
+The `disclaimer` and `info` kinds share a single `localStorage` object (`__wui_notices_ack__`) keyed by id. A missing entry means not yet acknowledged; once acknowledged, the gate is replaced by its children on the next render in every tab. The `footer` kind has no acknowledgement state. If a given id has no config, the corresponding host renders as if the notice didn't exist — every notice is fully opt-in per consumer and per id.
+
+### Built-in ids
+
+Five ids are auto-wired by `WalletUIProvider`. Provide a config for any of them to enable the corresponding UI; omit it to skip it entirely.
+
+| id             | kind         | When it shows                                                              |
+| -------------- | ------------ | -------------------------------------------------------------------------- |
+| `bridge`       | `disclaimer` | Inline inside the Bridge panel before the bridge UI renders                |
+| `bridgeFooter` | `footer`     | Inline footer below the Bridge submit button (always visible)              |
+| `bridgeSign`   | `info`       | Inline gate replacing the Bridge submit button after each click (every time)|
+| `sign`         | `info`       | Inline inside the Before-Sign dialog before the transaction review         |
+| `evm-connect`  | `disclaimer` | Modal overlay after wagmi reports a fresh EVM wallet connection            |
+
+The `evm-connect` gate is enforced — cancelling the modal calls `wagmi`'s `disconnect()` (no acknowledgement is recorded), so the gate re-appears on the next connect. `bridge` and `sign` render inline inside their host dialogs and acknowledge once. `bridgeSign` intercepts every Bridge submit click — `Continue` fires the bridge action, `Cancel` returns to the form — and is **not** persisted, so it warns on every attempt. `bridgeFooter` is purely informational and never blocks an action.
+
+### Configuring
+
+Pass `notices` to `WalletUIProvider`:
+
+```tsx
+import { WalletUIProvider, type NoticesConfig } from '@txnlab/use-wallet-ui-react'
+
+const notices: NoticesConfig = {
+  'evm-connect': {
+    kind: 'disclaimer',
+    text: (
+      <>
+        This app is non-custodial. By connecting an EVM wallet you agree to our{' '}
+        <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.
+      </>
+    ),
+  },
+  bridge: {
+    kind: 'disclaimer',
+    text: <>Cross-chain transfers are powered by Allbridge and are irreversible…</>,
+  },
+  sign: {
+    kind: 'info',
+    title: 'About signing',
+    body: <>Review the transactions below before approving in your wallet.</>,
+  },
+  bridgeFooter: {
+    kind: 'footer',
+    text: 'Cross-chain transfers are facilitated by Allbridge, a third-party provider…',
+  },
+}
+
+function Root() {
+  return (
+    <WalletProvider manager={walletManager}>
+      <WalletUIProvider wagmiConfig={wagmiConfig} notices={notices}>
+        {/* your app */}
+      </WalletUIProvider>
+    </WalletProvider>
+  )
+}
+```
+
+`text`, `title`, and `body` accept any `ReactNode`, so you can embed links, formatted blocks, etc. — content is rendered with the existing `--wui-color-*` theme variables.
+
+### Custom gates in your own UI
+
+The same primitives are re-exported from `@txnlab/use-wallet-ui-react` for app-side gating:
+
+```tsx
+import { Disclaimer, InfoDialog } from '@txnlab/use-wallet-ui-react'
+
+// Add a config entry under your own id…
+const notices: NoticesConfig = {
+  'risky-action': { kind: 'disclaimer', text: <>This action is irreversible.</> },
+}
+
+// …then wrap whatever the gate should guard.
+<Disclaimer id="risky-action">
+  <RiskyActionPanel />
+</Disclaimer>
+```
+
+`<Disclaimer>` and `<InfoDialog>` both accept an optional `className` to override the default container styling. With no matching config in `notices`, both render `children` directly.
+
+For lower-level control, `useNotice(id)` returns `{ config, isAcknowledged, acknowledge, reset }` and re-renders on changes from any tab.
+
+### Resetting acknowledgements
+
+```tsx
+import { clearAllNoticeAcks, readNoticeAcks, NOTICES_PERSIST_KEY } from '@txnlab/use-wallet-ui-react'
+
+readNoticeAcks()       // → { bridge: 1730000000000, sign: …, … }
+clearAllNoticeAcks()   // wipe every acknowledgement (all gates re-appear)
+// Or per-id: useNotice('bridge').reset()
+```
+
+Acknowledgements live in `localStorage[NOTICES_PERSIST_KEY]` as `Record<id, timestamp>`; cross-tab updates propagate via the `storage` event automatically.
+
 ## Troubleshooting
 
 ### `Buffer` errors

@@ -93,6 +93,14 @@ const notices: NoticesConfig = {
   //   title: 'About signing transactions',
   //   body: <p>Placeholder text explaining transaction signing</p>,
   // },
+  bridgeFooter: {
+    kind: 'footer',
+    text: 'Cross-chain transfers are facilitated by Allbridge, a third-party provider. The Foundation does not operate or control this service and does not guarantee the execution, security, or outcome of any transactions.',
+  },
+  bridgeSign: {
+    kind: 'info',
+    body: 'This transaction may involve cross-chain activity and could take several minutes to complete depending on network conditions.',
+  },
 }
 
 function makeWalletManager() {
