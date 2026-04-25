@@ -9,7 +9,7 @@ import { Menu, X } from 'lucide-react'
 export const Route = createFileRoute('/docs')({
   component: DocsLayout,
   head: () => ({
-    meta: [{ title: 'Documentation — Algorand x EVM' }],
+    meta: [{ title: 'Documentation — xChain EVM' }],
   }),
 })
 

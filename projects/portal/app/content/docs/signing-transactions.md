@@ -1,13 +1,13 @@
 ---
 title: Signing Transactions
-description: What happens when you sign an Algorand x EVM transaction in your EVM wallet.
+description: What happens when you sign an xChain EVM transaction in your EVM wallet.
 order: 4
 category: Using the App
 ---
 
 # Signing Transactions
 
-Every Algorand transaction made through Algorand x EVM is approved with a signature from your EVM wallet. Here's what to expect.
+Every Algorand transaction made through xChain EVM is approved with a signature from your EVM wallet. Here's what to expect.
 
 ## What You'll See
 
@@ -20,7 +20,7 @@ When you do something that moves funds - sending, bridging, opting into an asset
 5. Confirm that the transaction ID shown in your wallet matches the one from step 3.
 6. Sign in your wallet.
 
-You're not sending money out of your EVM wallet - you're authorizing your Algorand x EVM account to act on Algorand. There is no gas fee on the EVM side; the only network fee is the standard Algorand transaction fee (typically 0.001 ALGO).
+You're not sending money out of your EVM wallet - you're authorizing your xChain Account to act on Algorand. There is no gas fee on the EVM side; the only network fee is the standard Algorand transaction fee (typically 0.001 ALGO).
 
 Something not working as expected? Try [Troubleshooting](/docs/troubleshooting).
 
@@ -47,13 +47,13 @@ This is the same atomic-group behavior native Algorand wallets use - the only di
 
 ## Under the Hood
 
-The rest of this page covers the technical side - useful if you're curious or integrating against Algorand x EVM.
+The rest of this page covers the technical side - useful if you're curious or integrating against xChain EVM.
 
 ### EIP-712 Typed Data
 
-Algorand x EVM uses [EIP-712 typed data](https://eips.ethereum.org/EIPS/eip-712) rather than `personal_sign` or raw byte signing. The signing prompt your wallet displays includes:
+xChain EVM uses [EIP-712 typed data](https://eips.ethereum.org/EIPS/eip-712) rather than `personal_sign` or raw byte signing. The signing prompt your wallet displays includes:
 
-- A **domain** identifying Algorand x EVM, so a signature cannot be replayed against another dApp
+- A **domain** identifying xChain EVM, so a signature cannot be replayed against another dApp
 - The **transaction ID** (single transaction or group ID for atomic groups)
 
 The ID is a cryptographic commitment to the exact transaction(s) being submitted - the addresses, amounts, fees, asset IDs, notes, and every other field. If a single byte changes, the ID changes, and your signature is no longer valid for it.

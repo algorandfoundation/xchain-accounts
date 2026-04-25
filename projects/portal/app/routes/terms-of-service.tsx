@@ -9,7 +9,7 @@ import termsContent from '~/content/terms-of-service.md?raw'
 export const Route = createFileRoute('/terms-of-service')({
   component: TermsPage,
   head: () => ({
-    meta: [{ title: 'Terms of Service — Algorand x EVM' }],
+    meta: [{ title: 'Terms of Service — xChain EVM' }],
   }),
 })
 

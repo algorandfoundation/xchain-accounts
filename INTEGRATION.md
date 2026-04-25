@@ -1,11 +1,11 @@
 # Early Adopter Integration Guide
 
-In case you want to experiment with Algo x EVM accounts in your frontend:
+In case you want to experiment with xChain Accounts in your frontend:
 
 > [!IMPORTANT]
 > **DO NOT PERFORM PUBLIC BETA TESTING YET**
 >
-> **The logic sig standard may still evolve, which would impact the ALGO x EVM derived addresses. If you onboard public beta testers, future changes would require you to support them in recovering funds from outdated derivations or migrate to the latest version.**
+> **The logic sig standard may still evolve, which would impact the xChain EVM derived addresses. If you onboard public beta testers, future changes would require you to support them in recovering funds from outdated derivations or migrate to the latest version.**
 >
 > Tools aiding migrations/recovery will not be in scope for this project while it is in alpha/unstable state.
 >
@@ -105,7 +105,7 @@ import { RouterClient } from '@txnlab/haystack-router'
 // Create wagmi config with the Algorand EVM chain
 // replace values with your project name and WC ID
 const wagmiConfig = getDefaultConfig({
-  appName: 'My Algo x EVM App',
+  appName: 'My xChain EVM App',
   projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // from cloud.walletconnect.com
   chains: [algorandChain],
   // debug: true, // logs wagmi state changes, connector events, and EIP-1193 RPC traffic
@@ -167,7 +167,7 @@ function setNetwork(network: 'localnet' | 'testnet' | 'mainnet') {
 }
 ```
 
-## 3. Manage Algo x EVM Account
+## 3. Manage xChain Account
 
 After connecting your EVM account, you can manage it via:
 

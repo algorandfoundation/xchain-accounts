@@ -1,13 +1,13 @@
 ---
 title: Troubleshooting
-description: Common issues with Algorand x EVM and how to resolve them.
+description: Common issues with xChain EVM and how to resolve them.
 order: 8
 category: Advanced
 ---
 
 # Troubleshooting
 
-Solutions to issues you may run into while using Algorand x EVM.
+Solutions to issues you may run into while using xChain EVM.
 
 ## Mobile
 

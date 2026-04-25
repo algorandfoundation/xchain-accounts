@@ -1,6 +1,6 @@
 ---
 title: Send & Receive
-description: How to send and receive ALGO and ASAs with your Algorand x EVM account.
+description: How to send and receive ALGO and ASAs with your xChain Account.
 order: 5
 category: Using the App
 ---

@@ -1,6 +1,6 @@
 ---
 title: FAQ
-description: Frequently asked questions about Algorand x EVM.
+description: Frequently asked questions about xChain EVM.
 order: 9
 category: Advanced
 ---
@@ -17,7 +17,7 @@ Recover MetaMask with your seed phrase. Since your Algorand address is derived f
 
 Yes. Your derived Algorand address is the same regardless of which device you use. As long as you're signed into the same EVM account, you can access your Algorand assets from any device.
 
-### Is Algorand x EVM a custodial service?
+### Is xChain EVM a custodial service?
 
 No. The app never has access to your private keys. All signing happens in MetaMask. The app only builds transactions and submits signed ones to the Algorand network.
 
@@ -33,8 +33,8 @@ No. You pay the standard Algorand transaction fee (typically 0.001 ALGO). There 
 
 ### Why EIP-712 instead of personal_sign?
 
-EIP-712 provides **structured, human-readable** signing prompts in MetaMask. This lets you see exactly what you're approving, rather than signing opaque hex data. It also ensures **domain separation** between AVM and EVM, as the generated signature would only be useful in an Algorand x EVM context.
+EIP-712 provides **structured, human-readable** signing prompts in MetaMask. This lets you see exactly what you're approving, rather than signing opaque hex data. It also ensures **domain separation** between AVM and EVM, as the generated signature would only be useful in an xChain EVM context.
 
 ### Can I interact with Algorand smart contracts?
 
-Yes. Algorand x EVM accounts are implemented as [Smart Signature Accounts](https://dev.algorand.co/concepts/accounts/overview/#smart-signature-accounts-contract-accounts), which are a first-class account type on Algorand. They can sign any kind of transaction without limitations.
+Yes. xChain Accounts are implemented as [Smart Signature Accounts](https://dev.algorand.co/concepts/accounts/overview/#smart-signature-accounts-contract-accounts), which are a first-class account type on Algorand. They can sign any kind of transaction without limitations.

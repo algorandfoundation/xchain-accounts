@@ -29,7 +29,7 @@ const haystackRouter = new RouterClient({
 type AlgorandNetwork = "localnet" | "testnet" | "mainnet";
 
 const wagmiConfig = getDefaultConfig({
-  appName: "Algo x EVM Demo",
+  appName: "xChain EVM Demo",
   projectId: "3404862cca4501e4d84be405269d955c",
   chains: [algorandChain],
 });

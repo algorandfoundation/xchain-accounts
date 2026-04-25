@@ -2,12 +2,12 @@
 
 **EVM Account Abstraction on Algorand via ECDSA signature verification**
 
-Algo x EVM enables Ethereum wallets (MetaMask, etc.) to control Algorand accounts using an ECDSA signature verification LogicSig. Sign once with your Ethereum wallet to authorize transactions on Algorand—no seed phrases, no new wallets.
+xChain EVM enables Ethereum wallets (MetaMask, etc.) to control Algorand accounts using an ECDSA signature verification LogicSig. Sign once with your Ethereum wallet to authorize transactions on Algorand—no seed phrases, no new wallets.
 
 > [!IMPORTANT]
 > **DO NOT PERFORM PUBLIC BETA TESTING YET**
 >
-> **The logic sig standard may still evolve, which would impact the ALGO x EVM derived addresses. If you onboard public beta testers, future changes would require you to support them in recovering funds from outdated derivations or migrate to the latest version.**
+> **The logic sig standard may still evolve, which would impact the xChain EVM derived addresses. If you onboard public beta testers, future changes would require you to support them in recovering funds from outdated derivations or migrate to the latest version.**
 >
 > Tools aiding migrations/recovery will not be in scope for this project while it is in alpha/unstable state.
 >
@@ -20,10 +20,10 @@ This monorepo contains:
 
 - **[Logic Sig](projects/evm-logicsig/)** - LogicSig that verifies ECDSA (secp256k1) signatures from EVM addresses
 - **[SDK](projects/evm-sdk/)** - TypeScript SDK for integrating EVM wallet signing with Algorand
-- **[use-wallet](projects/use-wallet/)** - @txnlab/use-wallet with Algo x EVM / MetaMask support
-- **[use-wallet-ui](projects/use-wallet-ui/)** - @txnlab/use-wallet-ui with Algo x EVM / MetaMask support
+- **[use-wallet](projects/use-wallet/)** - @txnlab/use-wallet with xChain EVM / MetaMask support
+- **[use-wallet-ui](projects/use-wallet-ui/)** - @txnlab/use-wallet-ui with xChain EVM / MetaMask support
 - **[frontend](projects/frontend/)** - React demo application with MetaMask integration
-- **[rpc-server](projects/rpc-server/)** - Mock Ethereum JSON-RPC server (Cloudflare Worker) that lets MetaMask Mobile connect to Algorand as a custom network. Responds to standard RPC methods (`eth_chainId`, `eth_blockNumber`, `net_version`, `eth_gasPrice`, `eth_getBlockByNumber`) and serves real ALGO balances via `eth_getBalance` by deriving the Algo x EVM address and querying Algorand mainnet, converting from 6-decimal microAlgos to 18-decimal wei.
+- **[rpc-server](projects/rpc-server/)** - Mock Ethereum JSON-RPC server (Cloudflare Worker) that lets MetaMask Mobile connect to Algorand as a custom network. Responds to standard RPC methods (`eth_chainId`, `eth_blockNumber`, `net_version`, `eth_gasPrice`, `eth_getBlockByNumber`) and serves real ALGO balances via `eth_getBalance` by deriving the xChain EVM address and querying Algorand mainnet, converting from 6-decimal microAlgos to 18-decimal wei.
 
 ## How It Works
 
@@ -113,8 +113,8 @@ x-accounts/
 │   ├── evm-sdk/         # TypeScript SDK
 │   ├── frontend/        # React demo application
 │   ├── rpc-server/      # Mock Ethereum JSON-RPC (Cloudflare Worker)
-│   ├── use-wallet/      # Enhanced @txnlab/use-wallet with Algo x EVM support
-│   └── use-wallet-ui/   # Enhanced @txnlab/use-wallet-ui with Algo x EVM support
+│   ├── use-wallet/      # Enhanced @txnlab/use-wallet with xChain EVM support
+│   └── use-wallet-ui/   # Enhanced @txnlab/use-wallet-ui with xChain EVM support
 ```
 
 ## SDK Usage
@@ -166,7 +166,7 @@ await algorand.send.payment({
 
 ## use-wallet
 
-The use-wallet fork introduces a base class for Algo x EVM accounts, as well as an implementation for Metamask. This should be a drop-in replacement for Algorand dApps.
+The use-wallet fork introduces a base class for xChain Accounts, as well as an implementation for Metamask. This should be a drop-in replacement for Algorand dApps.
 
 ## use-wallet-ui & meta-wallet
 
@@ -176,7 +176,7 @@ Opinionated fork of use-wallet-ui adds "meta-wallet" functionality to dApps:
   - security context: runs in dApp; vulnerable in malicious or compromised dApps
 - Initiate transactions for managing assets, sending ALGO, etc
   - WIP
-- Onboarding guide for Algo x EVM connected accounts with 0 ALGO balance
+- Onboarding guide for xChain Accounts with 0 ALGO balance
 
 Integration Effort:
 

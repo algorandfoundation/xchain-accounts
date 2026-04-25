@@ -1,24 +1,24 @@
 ---
 title: Security
-description: How Algorand x EVM keeps your assets secure using on-chain ECDSA verification.
+description: How xChain EVM keeps your assets secure using on-chain ECDSA verification.
 order: 7
 category: Advanced
 ---
 
 # Security Model
 
-Understanding how Algorand x EVM secures your assets.
+Understanding how xChain EVM secures your assets.
 
 ## Key Principles
 
 1. **Your private key never leaves MetaMask** - the app only asks for signatures, never for your key
 2. **Verification is on-chain** - the Algorand Smart Account verifies every signature using [`ecdsa_pk_recover`](https://dev.algorand.co/reference/algorand-teal/opcodes/#ecdsa_pk_recover)
 3. **Deterministic address derivation** - your Algorand address is mathematically derived from your EVM address, not stored in a database
-4. **Domain isolation** - EIP-712 signatures are scoped to the Algorand x EVM domain, so a signature you give to another dApp cannot be replayed to authorize an Algorand transaction
+4. **Domain isolation** - EIP-712 signatures are scoped to the xChain EVM domain, so a signature you give to another dApp cannot be replayed to authorize an Algorand transaction
 
 ## How the Smart Account Works
 
-An Algorand [Smart Account](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/smartsigs/modes/) is a program that can authorize transactions when its logic evaluates to true. The Algorand x EVM Smart Account:
+An Algorand [Smart Account](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/smartsigs/modes/) is a program that can authorize transactions when its logic evaluates to true. The xChain EVM Smart Account:
 
 1. Takes the **transaction group ID** (or single transaction ID) as the payload
 2. Expects an **ECDSA signature** of the payload in an EIP-712 compatible structure
@@ -34,7 +34,7 @@ This means:
 
 ## EIP-712 Typed Data
 
-Rather than signing raw bytes, Algorand x EVM uses [EIP-712](https://eips.ethereum.org/EIPS/eip-712) structured data signing. This means MetaMask shows you a human-readable signing prompt in an Algorand context, reducing the risk of inadvertently crossing the Algorand / EVM boundary.
+Rather than signing raw bytes, xChain EVM uses [EIP-712](https://eips.ethereum.org/EIPS/eip-712) structured data signing. This means MetaMask shows you a human-readable signing prompt in an Algorand context, reducing the risk of inadvertently crossing the Algorand / EVM boundary.
 
 ## Trust Assumptions
 

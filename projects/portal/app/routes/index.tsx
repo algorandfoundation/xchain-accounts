@@ -53,7 +53,7 @@ function LandingPage() {
 
       {/* Features */}
       <section className="mx-auto max-w-6xl px-4 pt-10 pb-20">
-        <h2 className="text-center text-3xl font-bold">Why Algorand x EVM?</h2>
+        <h2 className="text-center text-3xl font-bold">Why xChain EVM?</h2>
         <p className="mx-auto mt-3 text-center text-muted-foreground">
           Keep your favorite Ethereum wallet and get Algorand's speed and low fees.
         </p>
@@ -84,7 +84,7 @@ function LandingPage() {
               <CardTitle>Domain Isolation</CardTitle>
             </CardHeader>
             <CardContent className="text-muted-foreground">
-              Algorand and EVM domains are fully separated. Sign Algorand x EVM transactions with EIP-712 typed data, eliminating the risk of
+              Algorand and EVM domains are fully separated. Sign xChain EVM transactions with EIP-712 typed data, eliminating the risk of
               cross-network contamination.
             </CardContent>
           </Card>
@@ -112,7 +112,7 @@ function LandingPage() {
               <Link2 className="mt-4 h-8 w-8 text-muted-foreground" />
               <h3 className="mt-3 text-lg font-semibold">Connect</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Connect your MetaMask or any EVM wallet to Algorand x EVM compatible dApps.
+                Connect your MetaMask or any EVM wallet to xChain EVM compatible dApps.
               </p>
             </div>
             <div className="flex flex-col items-center text-center">

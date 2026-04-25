@@ -1,13 +1,13 @@
 ---
 title: Getting Started
-description: Quick start guide for using Algorand x EVM with your EVM wallet.
+description: Quick start guide for using xChain EVM with your EVM wallet.
 order: 2
 category: Overview
 ---
 
 # Getting Started
 
-Get up and running with Algorand x EVM in a few minutes.
+Get up and running with xChain EVM in a few minutes.
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ Get up and running with Algorand x EVM in a few minutes.
 
 ### 1. Go to App
 
-Navigate to an Algorand x EVM compatible dApp, or use this site's [Manage Account](/app) interface.
+Navigate to an xChain EVM compatible dApp, or use this site's [Manage Account](/app) interface.
 
 ### 2. Connect Your Wallet
 
@@ -46,7 +46,7 @@ Once funded, you can:
 - **Bridge** assets to and from EVM chains
 - **Manage** your opted-in assets
 
-Each transaction will prompt your wallet to sign an EIP-712 typed data message scoped to the Algorand x EVM system.
+Each transaction will prompt your wallet to sign an EIP-712 typed data message scoped to the xChain EVM system.
 
 ## Next Steps
 

@@ -1,19 +1,19 @@
 ---
-title: What is Algorand x EVM?
-description: An overview of how Algorand x EVM lets you use your Ethereum wallet on Algorand.
+title: What is xChain EVM?
+description: An overview of how xChain EVM lets you use your Ethereum wallet on Algorand.
 order: 1
 category: Overview
 ---
 
-# What is Algorand x EVM?
+# What is xChain EVM?
 
-Algorand x EVM lets you use your existing Ethereum wallet to control an Algorand account. No new wallet, no new seed phrase, no new app to install.
+xChain EVM lets you use your existing Ethereum wallet to control an Algorand account. No new wallet, no new seed phrase, no new app to install.
 
-Algorand x EVM **derives an Algorand address from your EVM address** and uses an on-chain Smart Account to verify your EVM signatures.
+xChain EVM **derives an Algorand address from your EVM address** and uses an on-chain Smart Account to verify your EVM signatures.
 
 - **One wallet** - your EVM wallet works on both Ethereum and Algorand
 - **One identity** - your EVM address maps to exactly one Algorand address
-- **Full self-custody** - only your wallet signature can authorize Algorand x EVM transactions
+- **Full self-custody** - only your wallet signature can authorize xChain EVM transactions
 
 ## How It Works (High Level)
 

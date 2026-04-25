@@ -1,6 +1,6 @@
 ---
 title: Fund Your Account
-description: How to get ALGO into your Algorand x EVM derived account.
+description: How to get ALGO into your xChain Account.
 order: 3
 category: Using the App
 ---
@@ -58,7 +58,7 @@ For a full list of exchanges that support ALGO, see the [Algorand Start Here](ht
 
 If you already have ALGO in a Pera, Defly, or other Algorand wallet:
 
-1. Open the **Receive** panel in Algorand x EVM to see your address
+1. Open the **Receive** panel in xChain EVM to see your address
 2. Open your other wallet and send ALGO to that address
 3. The transfer confirms in ~3 seconds
 

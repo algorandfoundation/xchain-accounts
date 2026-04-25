@@ -1,5 +1,5 @@
 /**
- * Algo x EVM LogicSig
+ * xChain EVM LogicSig
  *
  * A LogicSig that allows Ethereum wallet addresses to control Algorand accounts.
  * The contract verifies ECDSA (secp256k1) signatures from an Ethereum address,

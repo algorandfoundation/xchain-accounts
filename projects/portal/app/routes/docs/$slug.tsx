@@ -13,7 +13,7 @@ export const Route = createFileRoute('/docs/$slug')({
   component: DocPage,
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData?.meta.title ?? 'Doc'} — Algorand x EVM Docs` },
+      { title: `${loaderData?.meta.title ?? 'Doc'} — xChain EVM Docs` },
       ...(loaderData?.meta.description
         ? [{ name: 'description', content: loaderData.meta.description }]
         : []),

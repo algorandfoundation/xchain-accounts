@@ -19,7 +19,7 @@ import '@rainbow-me/rainbowkit/styles.css'
 import '@txnlab/use-wallet-ui-react/dist/style.css'
 
 export const wagmiConfig = getDefaultConfig({
-  appName: 'Algo x EVM Portal',
+  appName: 'xChain EVM Portal',
   projectId: '3404862cca4501e4d84be405269d955c',
   chains: [algorandChain],
   ssr: false,
