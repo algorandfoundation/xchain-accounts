@@ -471,7 +471,7 @@ function AppContent({ theme, setTheme, network, setNetwork }: AppProps) {
         <NetworkSelector network={network} setNetwork={setNetwork} />
         <WalletButton />
       </div>
-      <h1>Liquid EVM Accounts</h1>
+      <h1>xChain EVM Accounts</h1>
       <p style={{ opacity: 0.6, marginTop: -8 }}>
         Network: <strong style={{ color: NETWORK_COLORS[network] }}>{NETWORK_LABELS[network]}</strong>
       </p>
