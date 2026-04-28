@@ -74,8 +74,8 @@ npm install -g pnpm@10.29.3
 
 ```bash
 # Clone the repository
-git clone https://github.com/algorandfoundation/x-accounts.git
-cd x-accounts
+git clone https://github.com/algorandfoundation/xchain-accounts.git
+cd xchain-accounts
 
 # fetch the submodules
 git submodule init
@@ -107,7 +107,7 @@ Open http://localhost:5173 and connect MetaMask to see EVM-controlled Algorand a
 ## Project Structure
 
 ```
-x-accounts/
+xchain-accounts/
 ├── projects/
 │   ├── evm-logicsig/    # Smart contract (Algorand TypeScript)
 │   ├── evm-sdk/         # TypeScript SDK
