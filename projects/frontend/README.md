@@ -1,73 +1,55 @@
-# React + TypeScript + Vite
+# frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React demo application for **xChain Accounts** — sign Algorand transactions with an EVM wallet (MetaMask, etc.) via [`algo-x-evm-sdk`](../evm-sdk/) and the forked [`@txnlab/use-wallet`](../use-wallet/) / [`@txnlab/use-wallet-ui`](../use-wallet-ui/) packages.
 
-Currently, two official plugins are available:
+## What it shows
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Connecting an EVM wallet through RainbowKit (MetaMask, WalletConnect, etc.) and deriving the corresponding Algorand lsig address
+- Signing standalone Algorand transactions and atomic groups using EIP-712 typed data
+- Switching between **mainnet**, **testnet**, and **localnet** (KMD wallet is exposed only on localnet)
+- Light/dark theming via `@txnlab/use-wallet-ui-react`
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19 + Vite
+- `@txnlab/use-wallet-react` and `@txnlab/use-wallet-ui-react` (workspace forks with xChain EVM support)
+- `algo-x-evm-sdk` (workspace) for lsig compilation and signing
+- `wagmi` + `@rainbow-me/rainbowkit` for the EVM connection layer
 
-## Expanding the ESLint configuration
+## Run
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+From the repo root, install once and start LocalNet if you want to test there:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm install
+algokit localnet start    # only needed for "localnet" mode
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Then in this directory:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm dev
 ```
+
+The app is served at <http://localhost:5173>. Default network is **mainnet**; the selection persists in `localStorage` under `algorand-network`.
+
+## Funding the lsig address
+
+Brand-new derived Algorand addresses need at least **0.1 ALGO** to exist on the network before they can send transactions:
+
+- **localnet** — use the KMD-funded dispenser via `algokit goal clerk send` or the in-app KMD wallet.
+- **testnet** — use the [Algorand TestNet dispenser](https://bank.testnet.algorand.network/).
+- **mainnet** — bridge or transfer ALGO to the displayed lsig address.
+
+## Build
+
+```bash
+pnpm build       # tsc -b && vite build
+pnpm preview     # serve the production build locally
+pnpm lint
+```
+
+## Notes
+
+- The frontend depends on workspace packages — run `algokit project run build` (or at minimum build `evm-logicsig` and `evm-sdk`) at the repo root before `pnpm dev` if any of them changed.
+- See the root [README](../../README.md) and [INTEGRATION.md](../../INTEGRATION.md) for protocol-level details.

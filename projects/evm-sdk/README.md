@@ -31,11 +31,12 @@ Algorand dApp                  EVM Wallet                     Algorand
 The logic signature:
 
 1. Takes the transaction ID (or group ID for atomic groups) as the payload
-2. Reads the EVM signature from `arg[0]` (65 bytes: R || S || V)
-3. Computes the EIP-712 digest: `keccak256("\x19\x01" + domainSeparator + messageHash)`
-4. Recovers the signer's public key via `ecdsa_pk_recover` (secp256k1)
-5. Derives the Ethereum address: `keccak256(pubkeyX || pubkeyY)[12:32]`
-6. Approves if the recovered address matches the templated owner
+2. Reads `arg[0]` as **66 bytes**: `Type (1) || R (32) || S (32) || V (1)`, and asserts the type byte equals `0x01` (the EVM signature scheme — reserved so future LogicSigs can branch on additional schemes such as Passkey/secp256r1)
+3. Computes `messageHash = keccak256(messageTypeHash || payload)`
+4. Computes the EIP-712 digest: `keccak256("\x19\x01" || domainSeparator || messageHash)`
+5. Recovers the signer's public key via `ecdsa_pk_recover` (secp256k1) using `recoveryId = V - 27`
+6. Derives the Ethereum address: `keccak256(pubkeyX || pubkeyY)[12:32]`
+7. Approves if the recovered address matches the templated owner
 
 ### EIP-712 Domain
 
@@ -293,13 +294,13 @@ const message = formatEIP712Message(payload)
 
 #### `parseEvmSignature(sigHex: string): Uint8Array`
 
-Parses a 0x-prefixed 65-byte EVM signature hex string into a `Uint8Array` of `R(32) || S(32) || V(1)`.
+Parses a 0x-prefixed 65-byte EVM signature hex string and returns the **66-byte LogicSig arg format**: `Type(1, 0x01) || R(32) || S(32) || V(1)`. The leading type byte is the value of `EVM_LSIG_TYPE` and is the value the LogicSig asserts on `arg[0]`.
 
-**Security**: Automatically normalizes signatures to lower-S form because the AVM only accepts lower-S signatures. If `s > n/2` (where n is the secp256k1 curve order), the signature is normalized to `n - s` with the recovery ID flipped.
+**Security**: Automatically normalizes signatures to lower-S form because the AVM only accepts lower-S signatures. If `s > n/2` (where n is the secp256k1 curve order), the signature is normalized to `n - s` with the recovery ID (`V`) flipped between 27 and 28.
 
 ```typescript
-const sig = parseEvmSignature("0x1234...") // 65-byte signature
-// Returns normalized signature with s in lower half
+const sig = parseEvmSignature("0x1234...") // 66 bytes: 0x01 || R || S || V
+// Returns lower-S–normalized signature with the LogicSig type byte prepended
 ```
 
 #### `EIP712_DOMAIN`

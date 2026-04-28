@@ -1,15 +1,15 @@
 {
   "name": "algo-x-evm-sdk",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/algorandfoundation/xchain-accounts.git"
   },
   "bugs": {
-    "url": "https://github.com/algorandfouncation/xchain-accounts/issues"
+    "url": "https://github.com/algorandfoundation/xchain-accounts/issues"
   },
-  "homepage": "https://github.com/algorandfouncation/xchain-accounts/tree/main/projects/evm-sdk#readme",
+  "homepage": "https://github.com/algorandfoundation/xchain-accounts/tree/main/projects/evm-sdk#readme",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [

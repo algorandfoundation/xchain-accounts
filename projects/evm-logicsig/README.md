@@ -26,11 +26,12 @@ A LogicSig is a stateless smart contract on Algorand that can authorize transact
 
 ```
 evm-logicsig/
-├── smart_contracts/
-│   ├── algo-x-evm/
-│   │   ├── logicsig.algo.ts        # Main LogicSig contract
-│   │   └── logicsig.e2e.spec.ts    # E2E tests
-│   ├── artifacts/                   # Compiled TEAL output
+└── smart_contracts/
+    ├── algo-x-evm/
+    │   ├── logicsig.algo.ts        # Main LogicSig contract
+    │   └── logicsig.e2e.spec.ts    # E2E tests
+    ├── artifacts/                  # Compiled TEAL output
+    └── index.ts                    # Build entrypoint
 ```
 
 ## How the Contract Works

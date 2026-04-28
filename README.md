@@ -1,4 +1,4 @@
-# Liquid Accounts
+# xChain Accounts
 
 **EVM Account Abstraction on Algorand via ECDSA signature verification**
 
@@ -23,7 +23,9 @@ This monorepo contains:
 - **[use-wallet](projects/use-wallet/)** - @txnlab/use-wallet with xChain EVM / MetaMask support
 - **[use-wallet-ui](projects/use-wallet-ui/)** - @txnlab/use-wallet-ui with xChain EVM / MetaMask support
 - **[frontend](projects/frontend/)** - React demo application with MetaMask integration
+- **[portal](projects/portal/)** - Docs and information portal (TanStack Start + Cloudflare)
 - **[rpc-server](projects/rpc-server/)** - Mock Ethereum JSON-RPC server (Cloudflare Worker) that lets MetaMask Mobile connect to Algorand as a custom network. Responds to standard RPC methods (`eth_chainId`, `eth_blockNumber`, `net_version`, `eth_gasPrice`, `eth_getBlockByNumber`) and serves real ALGO balances via `eth_getBalance` by deriving the xChain EVM address and querying Algorand mainnet, converting from 6-decimal microAlgos to 18-decimal wei.
+- **[dfx](projects/dfx/)** - Deferred Execution Service (Cloudflare Worker + Durable Object) that accepts signed transaction groups, simulates them, and retries those that fail due to insufficient balance until they become valid or expire.
 
 ## How It Works
 
@@ -77,9 +79,8 @@ npm install -g pnpm@10.29.3
 git clone https://github.com/algorandfoundation/xchain-accounts.git
 cd xchain-accounts
 
-# fetch the submodules
-git submodule init
-git submodule update
+# fetch the submodules (use-wallet, use-wallet-ui)
+git submodule update --init --recursive
 
 # Install dependencies
 # Read the output carefully, you may need to approve build scripts.
@@ -112,7 +113,9 @@ xchain-accounts/
 │   ├── evm-logicsig/    # Smart contract (Algorand TypeScript)
 │   ├── evm-sdk/         # TypeScript SDK
 │   ├── frontend/        # React demo application
+│   ├── portal/          # Docs/info portal (TanStack Start + Cloudflare)
 │   ├── rpc-server/      # Mock Ethereum JSON-RPC (Cloudflare Worker)
+│   ├── dfx/             # Deferred Execution Service (Cloudflare Worker + DO)
 │   ├── use-wallet/      # Enhanced @txnlab/use-wallet with xChain EVM support
 │   └── use-wallet-ui/   # Enhanced @txnlab/use-wallet-ui with xChain EVM support
 ```
@@ -196,12 +199,16 @@ Possible future work:
 algokit project run build
 ```
 
-This compiles:
-1. Logic sig to TEAL
-2. TypeScript SDK
-3. Use-wallet packages
-4. Use-wallet-ui package
-5. Frontend
+This compiles, in order (per `.algokit.toml`):
+1. Logic sig to TEAL (`evm-logicsig`)
+2. TypeScript SDK (`evm-sdk`)
+3. Use-wallet packages (`use-wallet`)
+4. Use-wallet-ui package (`use-wallet-ui`)
+5. Portal (`portal`)
+6. Frontend (`frontend`)
+7. RPC server (`rpc-server`)
+
+`dfx` is not part of the algokit workspace build; build it directly with `pnpm --filter dfx build`.
 
 ### Test
 
@@ -229,11 +236,7 @@ Contributions are welcome! Please see individual project READMEs for specific de
 
 ## CI/CD
 
-This project uses GitHub Actions for continuous integration and deployment. Workflows are located in [`.github/workflows`](./.github/workflows).
-
-On `main` branch pushes:
-- Automated testing and linting
-- Smart contract deployment to TestNet via [AlgoNode](https://algonode.io)
+GitHub Actions workflows are present in [`.github/workflows`](./.github/workflows) but are currently **disabled** (each file is suffixed `.disabled`). No automated testing, linting, or deployment runs on push at this time. The disabled workflows cover smart-contract CI/CD, validation, and release; re-enable by removing the `.disabled` suffix once the project is ready for automated pipelines.
 
 ## Resources
 
