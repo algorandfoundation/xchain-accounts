@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { useWallet } from "@txnlab/use-wallet-react";
-import { WalletButton } from "@txnlab/use-wallet-ui-react";
+import { useWallet, WalletId } from "@txnlab/use-wallet-react";
+import { ConnectWalletButton } from "@txnlab/use-wallet-ui-react";
 import { WalletProviders, wagmiConfig } from "./wallet-providers";
 import { WalletDashboard } from "./wallet-dashboard";
 import { UseAlgorandWith } from "~/components/use-algorand-with";
@@ -50,7 +50,22 @@ function WalletResolver({ onResolved }: { onResolved: () => void }) {
 }
 
 function WalletAppContent() {
-  const { activeAddress } = useWallet();
+  const { activeAddress, wallets } = useWallet();
+
+  // Open RainbowKit's connect modal directly, skipping the intermediate
+  // ConnectWalletMenu dialog. We still go through use-wallet's connect()
+  // so wagmi → use-wallet state sync, connector metadata, and the
+  // 'evm-connect' disclaimer continue to work as configured.
+  const handleConnect = useCallback(() => {
+    const rk = wallets.find((w) => w.id === WalletId.RAINBOWKIT);
+    if (!rk) return;
+    rk.connect().catch((err: unknown) => {
+      const message = err instanceof Error ? err.message : String(err);
+      if (!/dismissed|cancel/i.test(message)) {
+        console.warn("Wallet connect failed:", message);
+      }
+    });
+  }, [wallets]);
 
   return (
     <>
@@ -75,7 +90,7 @@ function WalletAppContent() {
             No new wallet needed, no setup. Just connect any EVM wallet to send transactions, manage assets, swap and bridge on Algorand.
           </p>
           <div data-wallet-ui className="flex flex-col gap-2 justify-center mb-8">
-            <WalletButton className="rounded-md" />
+            <ConnectWalletButton className="rounded-md" onClick={handleConnect} />
             <Button variant="outline" size="lg" asChild>
               <Link to="/docs">Read the Docs</Link>
             </Button>
