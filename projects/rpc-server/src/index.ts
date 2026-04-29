@@ -25,7 +25,7 @@ const SEL_TRANSFER = "a9059cbb";
 const SEL_APPROVE = "095ea7b3";
 const SEL_TRANSFER_FROM = "23b872dd";
 
-const TRANSACTION_SITE_URL = "https://x.algorand.co";
+const TRANSACTION_SITE_URL = "https://xchain.algorand.co";
 const DIRECT_TX_ERROR = `Direct transactions are not supported on this network. Please use ${TRANSACTION_SITE_URL} to send tokens.`;
 
 /**
