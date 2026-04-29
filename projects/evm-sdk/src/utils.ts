@@ -170,7 +170,7 @@ const EIP712_DOMAIN_TYPE = [
  * @returns EIP-712 message object
  */
 export function formatEIP712Message(payload: Uint8Array): { "Transaction ID": `0x${string}` } {
-  return { "Transaction ID": `0x${Buffer.from(payload).toString("hex")}` }
+  return { "Transaction ID": bytesToHex(payload) as `0x${string}` }
 }
 
 /**
