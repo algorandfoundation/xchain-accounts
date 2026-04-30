@@ -13,11 +13,11 @@ Every Algorand transaction made through xChain EVM is approved with a signature 
 
 When you do something that moves funds - sending, bridging, opting into an asset, or interacting with a dApp - the app prepares the transaction for your review, and then your wallet pops up asking you to **sign**.
 
-1. The app shows you a visual summary of the transactions (typically sender, receiver, amount, assets, application IDs, etc)
+1. The app shows you a visual summary of the transactions (typically sender, receiver, amount, assets, application IDs, etc).
 2. The visualisations can be tapped to show full transaction details.
-3. A resulting transction ID is shown in `0x...` hexadecimal format
+3. A resulting transction ID is shown in `0x...` hexadecimal format.
 4. Tap "Review" to send the transaction to your wallet.
-5. Confirm that the transaction ID shown in your wallet matches the one from step 3.
+5. Confirm that the transaction ID shown in your wallet matches the one displayed by the app.
 6. Sign in your wallet.
 
 You're not sending money out of your EVM wallet - you're authorizing your xChain Account to act on Algorand. There is no gas fee on the EVM side; the only network fee is the standard Algorand transaction fee (typically 0.001 ALGO).
@@ -26,11 +26,11 @@ Something not working as expected? Try [Troubleshooting](/docs/troubleshooting).
 
 ## Before You Sign
 
-Your wallet has not committed to anything until you click Sign. If something looks off, just reject - no transaction is submitted, no fee is paid. A few quick checks:
+Your wallet has not committed to anything until you click Sign/Confirm button. If something looks off, just reject - no transaction is submitted, no fee is paid. A few quick checks:
 
 - The recipient address matches what you intended
 - The amount and asset are what you expected
-- **The transaction ID shown in your wallet matches the one in the transaction review panel.**
+- **The transaction ID shown in your wallet matches the one in the app's transaction review panel**
 
 ## Group Transactions
 
